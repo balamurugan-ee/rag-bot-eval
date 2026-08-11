@@ -1,0 +1,94 @@
+# Hospital Chatbot API Tests
+
+### Health Check
+GET http://127.0.0.1:8000/health
+Accept: application/json
+
+###
+
+### Root Endpoint
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+###
+
+### Test 1: Cardiology Query
+POST http://127.0.0.1:8000/chat
+Content-Type: application/json
+
+{
+  "message": "I have chest pain"
+}
+
+###
+
+### Test 2: Pediatrics Query
+POST http://127.0.0.1:8000/chat
+Content-Type: application/json
+
+{
+  "message": "My child has fever since yesterday"
+}
+
+###
+
+### Test 3: Radiology Query
+POST http://127.0.0.1:8000/chat
+Content-Type: application/json
+
+{
+  "message": "I need to schedule an MRI scan"
+}
+
+###
+
+### Test 4: Pharmacy Query
+POST http://127.0.0.1:8000/chat
+Content-Type: application/json
+
+{
+  "message": "Where can I get my prescription filled?"
+}
+
+###
+
+### Test 5: Billing Query
+POST http://127.0.0.1:8000/chat
+Content-Type: application/json
+
+{
+  "message": "I need information about my hospital bill"
+}
+
+###
+
+### Test 6: General Information Query
+POST http://127.0.0.1:8000/chat
+Content-Type: application/json
+
+{
+  "message": "What are the visiting hours?"
+}
+
+###
+
+### Test 7: Ophthalmology Query
+POST http://127.0.0.1:8000/chat
+Content-Type: application/json
+
+{
+  "message": "I am having trouble seeing clearly"
+}
+
+###
+
+### Test 8: Dermatology Query
+POST http://127.0.0.1:8000/chat
+Content-Type: application/json
+
+{
+  "message": "I have a skin rash on my arm"
+}
+
+###
+
