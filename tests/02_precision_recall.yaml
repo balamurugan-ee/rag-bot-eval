@@ -79,3 +79,55 @@
     - type: javascript
       value: "output.department === 'Neurology'"
       metric: "Neurology"
+
+# --- Named-entity / administrative phrasing regression tests ---
+# Different axis than B1-B7: not cross-department symptom confusion, but whether
+# a query that explicitly NAMES a department (with no symptom at all) still gets
+# routed there. This is exactly the classifier bug found while investigating C1
+# ("What are Cardiology's opening hours?" used to route to Billing). These probe
+# the same bug across different phrasings and departments to check the prompt
+# fix generalizes, not just for the one exact sentence we happened to test.
+
+- description: "B8 - Generic 'tell me about' framing, no symptom (regression: used to route General Medicine)"
+  vars:
+    message: "Tell me about the Cardiology department"
+  metadata:
+    chapter: B
+    regression: "true"
+  assert:
+    - type: javascript
+      value: "output.department === 'Cardiology'"
+      metric: "Cardiology"
+
+- description: "B9 - Terse 'X hours' phrasing (regression: used to route Billing)"
+  vars:
+    message: "Cardiology hours"
+  metadata:
+    chapter: B
+    regression: "true"
+  assert:
+    - type: javascript
+      value: "output.department === 'Cardiology'"
+      metric: "Cardiology"
+
+- description: "B10 - 'When is X open' phrasing, different department (generalization check)"
+  vars:
+    message: "When is Radiology open?"
+  metadata:
+    chapter: B
+    regression: "true"
+  assert:
+    - type: javascript
+      value: "output.department === 'Radiology'"
+      metric: "Radiology"
+
+- description: "B11 - 'Tell me about' framing, different department (generalization check)"
+  vars:
+    message: "Tell me about the Pharmacy department"
+  metadata:
+    chapter: B
+    regression: "true"
+  assert:
+    - type: javascript
+      value: "output.department === 'Pharmacy'"
+      metric: "Pharmacy"
