@@ -1,0 +1,17 @@
+description: "Riverside Hospital chatbot - classifier-only eval (department routing accuracy)"
+
+prompts:
+  - "{{message}}"
+
+providers:
+  - id: http://localhost:8000/classify
+    label: classifier
+    config:
+      method: POST
+      headers:
+        Content-Type: application/json
+      body:
+        message: "{{message}}"
+      transformResponse: "json.department"
+
+tests: tests/classification_ground_truth.csv

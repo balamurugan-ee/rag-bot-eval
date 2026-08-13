@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 import logging
 
 from src.routers.chat import router as chat_router
+from src.routers.classify import router as classify_router
 from src.routers.system import router as system_router
 from src.init import initialize_services
 
@@ -41,6 +42,7 @@ app = FastAPI(
 # Include routers
 app.include_router(system_router)
 app.include_router(chat_router)
+app.include_router(classify_router)
 
 
 

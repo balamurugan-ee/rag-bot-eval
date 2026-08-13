@@ -22,7 +22,12 @@ class ChatRequest(BaseModel):
 class ChatResponse(BaseModel):
     department: DepartmentType
     response: str
-    
+
+
+class ClassifyResponse(BaseModel):
+    department: DepartmentType
+
+
 
 class ErrorResponse(BaseModel):
     error: str
