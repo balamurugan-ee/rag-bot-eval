@@ -1,0 +1,81 @@
+# Chapter B: Precision/recall stress test
+# Deliberately ambiguous, cross-department queries.
+# Each assertion is tagged with metric: <Department> so promptfoo's results view
+# aggregates a per-department pass rate -- our recall-per-class proxy.
+# Some of these gold labels are genuinely debatable -- flagged inline where so.
+
+- description: "B1 - Chest pain + anxiety (cold-open question)"
+  vars:
+    message: "I have chest pain and I'm really anxious"
+  metadata:
+    chapter: B
+  assert:
+    - type: javascript
+      value: "output.department === 'Cardiology'"
+      metric: "Cardiology"
+
+- description: "B2 - Child rash + fever (DEBATABLE: Pediatrics vs Dermatology)"
+  vars:
+    message: "My child has a red, itchy rash and a mild fever"
+  metadata:
+    chapter: B
+    debatable: "true"
+  assert:
+    - type: javascript
+      value: "output.department === 'Pediatrics'"
+      metric: "Pediatrics"
+
+- description: "B3 - Blurred vision + headache (DEBATABLE: Ophthalmology vs Neurology)"
+  vars:
+    message: "I have blurred vision and a bad headache"
+  metadata:
+    chapter: B
+    debatable: "true"
+  assert:
+    - type: javascript
+      value: "output.department === 'Ophthalmology'"
+      metric: "Ophthalmology"
+
+- description: "B4 - X-ray for fractured arm (rules say imaging keyword wins over body part)"
+  vars:
+    message: "I need an X-ray for my fractured arm"
+  metadata:
+    chapter: B
+  assert:
+    - type: javascript
+      value: "output.department === 'Radiology'"
+      metric: "Radiology"
+
+- description: "B5 - Insurance coverage for an MRI (rules say insurance framing wins over imaging)"
+  vars:
+    message: "Can you check if my insurance covers an MRI scan"
+  metadata:
+    chapter: B
+  assert:
+    - type: javascript
+      value: "output.department === 'Billing'"
+      metric: "Billing"
+
+# --- Confusion-matrix reinforcement pair for B3 (Ophthalmology <-> Neurology) ---
+# Pure, unconfounded symptoms for each department, so a correct call here is a
+# genuine true positive we can pair against B3's cross-contamination.
+
+- description: "B6 - Pure eye symptoms, no headache confound (should be a clean Ophthalmology TP)"
+  vars:
+    message: "My eyes have been really itchy and I'm struggling to focus on things up close"
+  metadata:
+    chapter: B
+  assert:
+    - type: javascript
+      value: "output.department === 'Ophthalmology'"
+      metric: "Ophthalmology"
+
+- description: "B7 - Pure neuro symptoms, no vision confound (should be a clean Neurology TP)"
+  vars:
+    message: "I've been having severe migraines along with numbness in my hands"
+  metadata:
+    chapter: B
+  assert:
+    - type: javascript
+      value: "output.department === 'Neurology'"
+      metric: "Neurology"

@@ -1,0 +1,57 @@
+# Chapter A: Accuracy warm-up
+# Unambiguous queries, one clearly-worded symptom per department.
+# Expectation: these should all pass -- this is the "green = accuracy" baseline moment.
+
+- description: "A1 - Cardiology clear symptom match"
+  vars:
+    message: "I have been having chest pain for two days"
+  metadata:
+    chapter: A
+  assert:
+    - type: javascript
+      value: "output.department === 'Cardiology'"
+
+- description: "A2 - Pediatrics child symptom"
+  vars:
+    message: "My child has had a fever since yesterday"
+  metadata:
+    chapter: A
+  assert:
+    - type: javascript
+      value: "output.department === 'Pediatrics'"
+
+- description: "A3 - Radiology explicit imaging request"
+  vars:
+    message: "I need to schedule an MRI scan"
+  metadata:
+    chapter: A
+  assert:
+    - type: javascript
+      value: "output.department === 'Radiology'"
+
+- description: "A4 - Orthopedics injury after activity"
+  vars:
+    message: "I have severe back pain after lifting weights"
+  metadata:
+    chapter: A
+  assert:
+    - type: javascript
+      value: "output.department === 'Orthopedics'"
+
+- description: "A5 - Billing payment query"
+  vars:
+    message: "I need to speak to someone about my hospital bill"
+  metadata:
+    chapter: A
+  assert:
+    - type: javascript
+      value: "output.department === 'Billing'"
+
+- description: "A6 - Pharmacy prescription query"
+  vars:
+    message: "Where can I get my prescription filled?"
+  metadata:
+    chapter: A
+  assert:
+    - type: javascript
+      value: "output.department === 'Pharmacy'"

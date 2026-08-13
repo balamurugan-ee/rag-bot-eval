@@ -1,0 +1,19 @@
+description: "Riverside Hospital chatbot - promptfoo demo"
+
+prompts:
+  - "{{message}}"
+
+providers:
+  - id: http://localhost:8000/chat
+    label: chatbot
+    config:
+      method: POST
+      headers:
+        Content-Type: application/json
+      body:
+        message: "{{message}}"
+      transformResponse: "json"
+
+tests:
+  - tests/01_accuracy.yaml
+  - tests/02_precision_recall.yaml
