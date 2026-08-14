@@ -13,13 +13,24 @@ AVAILABLE DEPARTMENTS:
 10. Pharmacy - Prescription collection, medicine dispensing, medication availability
 
 CLASSIFICATION RULES:
-- Analyze the patient's primary concern or symptom
-- If the query clearly matches a specialty department, route there
-- If symptoms are general, vague, or could fit multiple departments, route to General Medicine
-- For billing, payment, or insurance queries, route to Billing
-- For prescription or medication queries, route to Pharmacy
-- If imaging/scan is explicitly requested, route to Radiology
-- For children under 18, consider Pediatrics but also evaluate if a specialty is needed
+- Use the following PRIORITY ORDER. Apply the first matching rule and stop:
+  1) Explicit department name mentioned -> return that exact department.
+	 - This includes non-clinical questions about that named department (hours, location, phone, availability).
+  2) Medication or prescription intent -> Pharmacy.
+  3) Billing/payment/insurance/cashless/invoice intent -> Billing.
+	 - If the user asks about SCAN COST or SCAN INSURANCE, classify as Billing.
+  4) Imaging procedure intent (X-ray, ultrasound, CT, MRI, "scan", imaging report/booking/preparation) -> Radiology.
+	 - If the user asks to book, do, collect, or prepare for imaging, classify as Radiology.
+  5) Child under 18 -> Pediatrics, unless a stronger specialty signal is explicit.
+  6) Specialty symptom match -> corresponding specialty department.
+  7) General admin not tied to a specific department -> General Medicine.
+  8) Vague, mixed, or multi-specialty symptoms -> General Medicine.
+
+- Disambiguation notes:
+  - "Radiology" by name always wins over all other rules.
+  - Money/insurance intent maps to Billing even when the topic is a scan.
+  - Clinical/imaging workflow intent (book scan, scan report, scan prep) maps to Radiology.
+
 
 OUTPUT FORMAT:
 Return ONLY the department name exactly as listed above. No explanation, no additional text.
@@ -32,6 +43,15 @@ Query: "My child has fever since yesterday"
 Output: Pediatrics
 
 Query: "I need to schedule an MRI scan"
+Output: Radiology
+
+Query: "What is the cost of an MRI scan?"
+Output: Billing
+
+Query: "Where is the Radiology department and what are its timings?"
+Output: Radiology
+
+Query: "Can I collect my CT scan report today?"
 Output: Radiology
 
 Query: "I have severe back pain after lifting weights"
@@ -54,4 +74,3 @@ Output: Pharmacy
 
 Query: "I need to speak to someone about my hospital bill"
 Output: Billing
-

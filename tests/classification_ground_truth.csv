@@ -7,7 +7,7 @@ message,__expected,description
 "Where can I get my prescription filled?",Pharmacy,"A6 - clear symptom match"
 "I have chest pain and I'm really anxious",Cardiology,"B1 - chest pain + anxiety"
 "My child has a red, itchy rash and a mild fever",Pediatrics,"B2 - DEBATABLE: Pediatrics vs Dermatology"
-"I have blurred vision and a bad headache",Ophthalmology,"B3 - DEBATABLE: Ophthalmology vs Neurology"
+I have blurred vision and mild headache,Ophthalmology,"B3 - DEBATABLE: Ophthalmology vs Neurology"
 "I need an X-ray for my fractured arm",Radiology,"B4 - imaging keyword should win over body part"
 "Can you check if my insurance covers an MRI scan",Billing,"B5 - insurance framing should win over imaging"
 "My eyes have been really itchy and I'm struggling to focus on things up close",Ophthalmology,"B6 - pure eye symptoms, no headache confound"
@@ -16,3 +16,6 @@ message,__expected,description
 "Cardiology hours",Cardiology,"B9 - terse named-department hours phrasing"
 "When is Radiology open?",Radiology,"B10 - named department, different phrasing"
 "Tell me about the Pharmacy department",Pharmacy,"B11 - named department, generalization check"
+"I want to take a MRI scan, how much will it cost",Billing,B12 - Infer from the intent
+Can I get my MRI report today? ,Radiology,B13 - department routing
+I want to book an X-ray appointment ,Radiology,

@@ -1,64 +1,51 @@
 # Hospital Chatbot Application
 
-A modular chatbot application for Riverside Multispecialty Hospital that performs:
-1. **Department Classification** - Routes patient queries to the correct department
-2. **Hospital Receptionist** - Answers questions about hospital services, timings, and policies
+Riverside Multispecialty Hospital chatbot with department classification and RAG-based Q&A.
 
-## Architecture
+## Structure
 
 ```
-src/
-├── config.py              # Configuration and settings
-├── models.py              # Pydantic models for requests/responses
-└── services/
-    ├── classifier.py      # Department classification service
-    ├── receptionist.py    # Q&A receptionist service
-    └── prompt_loader.py   # Prompt template loader
+├── main.py           # FastAPI backend
+├── src/              # Backend services (classifier, receptionist, vectordb)
+├── ui/               # Streamlit UI (see ui/README.md)
+├── prompts/          # Classification and receptionist prompts  
+├── knowledge-base/   # Hospital information
+└── tests/            # Promptfoo evaluation tests
 ```
 
-## Setup
+## Quick Start
 
-### 1. Install Dependencies
-
-**Option A: Using pip with requirements.txt (Recommended)**
+### Backend
 
 ```bash
 pip install -r requirements.txt
+uvicorn main:app --reload
 ```
 
-**Option B: Using pip with pyproject.toml**
+### UI (optional)
 
 ```bash
-pip install -e . --no-build-isolation
+cd ui
+pip install -r requirements.txt
+streamlit run app.py
 ```
 
-**Option C: Manual installation**
+## Access
 
-```bash
-pip install fastapi uvicorn langchain langchain-openai pydantic pydantic-settings python-dotenv
+- API: http://localhost:8000
+- API Docs: http://localhost:8000/docs  
+- UI: http://localhost:8501
+
+## Configuration
+
+Create `.env` file:
 ```
-
-### 2. Configure Environment
-
-Create or update `.env` file with your OpenAI API key:
-
-```bash
-OPENAI_API_KEY=your_actual_openai_api_key
+OPENAI_API_KEY=your_key_here
 ```
-
-### 3. Run the Server
-
-```bash
-uvicorn main:app --reload --port 8000
-```
-
-The API will be available at `http://localhost:8000`
 
 ## API Endpoints
 
 ### POST /chat
-
-Main chat endpoint that classifies the query and generates a response.
 
 **Request:**
 ```json
@@ -71,71 +58,35 @@ Main chat endpoint that classifies the query and generates a response.
 ```json
 {
   "department": "Cardiology",
-  "response": "For chest pain, please visit our Cardiology department. We are open Monday–Saturday, 9:00 AM–5:00 PM. If this is an emergency, please call our Emergency Department at +91 44 4100 2299."
+  "response": "For chest pain, please visit our Cardiology department..."
 }
 ```
+
+### POST /classify
+
+Classification only.
 
 ### GET /health
 
-Health check endpoint.
+Health check.
 
-**Response:**
-```json
-{
-  "status": "healthy"
-}
-```
-
-## Testing
-
-### cURL Example
+## Evaluation
 
 ```bash
-curl -X POST "http://localhost:8000/chat" \
-  -H "Content-Type: application/json" \
-  -d '{"message": "I have chest pain"}'
+promptfoo eval -c promptfooconfig.yaml
 ```
 
-### Python Example
+Test cases: `tests/classification_ground_truth.csv`
 
-```python
-import requests
 
-response = requests.post(
-    "http://localhost:8000/chat",
-    json={"message": "I have chest pain"}
-)
 
-print(response.json())
-```
 
-## Features
 
-- **Modular Design**: Separation of concerns with services, models, and config
-- **Type Safety**: Pydantic models for request/response validation
-- **Error Handling**: Comprehensive error handling with proper HTTP status codes
-- **Logging**: Request and response logging for debugging
-- **LangChain Integration**: Uses LangChain for LLM orchestration
-- **Prompt Management**: External prompt templates for easy modification
 
-## Department Categories
 
-1. Cardiology
-2. Pediatrics
-3. Orthopedics
-4. Dermatology
-5. Neurology
-6. Ophthalmology
-7. Radiology
-8. General Medicine
-9. Billing
-10. Pharmacy
 
-## Configuration
 
-Edit `src/config.py` to modify:
-- Model name (default: `gpt-4`)
-- Temperature (default: `0.0`)
-- Paths to prompts and knowledge base
+
+
 
 
