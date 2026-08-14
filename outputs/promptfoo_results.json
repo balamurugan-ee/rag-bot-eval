@@ -1,0 +1,3445 @@
+{
+  "evalId": "eval-8Zg-2026-08-14T02:59:13",
+  "results": {
+    "version": 3,
+    "timestamp": "2026-08-14T02:59:13.968Z",
+    "prompts": [
+      {
+        "id": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "raw": "{{message}}",
+        "label": "{{message}}",
+        "provider": "classifier",
+        "metrics": {
+          "score": 20,
+          "testPassCount": 20,
+          "testFailCount": 0,
+          "testErrorCount": 0,
+          "assertPassCount": 20,
+          "assertFailCount": 0,
+          "totalLatencyMs": 68220,
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 20,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          },
+          "namedScores": {},
+          "namedScoresCount": {},
+          "namedScoreWeights": {},
+          "cost": 0
+        }
+      }
+    ],
+    "results": [
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Cardiology"
+              }
+            }
+          ]
+        },
+        "id": "39015c3b-39ae-49c1-a24f-746c95dc45d2",
+        "latencyMs": 3646,
+        "namedScores": {},
+        "prompt": {
+          "raw": "I have been having chest pain for two days",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Cardiology\"}",
+          "latencyMs": 3646,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "27",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Cardiology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "I have been having chest pain for two days",
+            "description": "A1 - clear symptom match"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Cardiology"
+            }
+          ],
+          "options": {},
+          "description": "Row #1",
+          "metadata": {}
+        },
+        "testIdx": 0,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "I have been having chest pain for two days",
+          "description": "A1 - clear symptom match"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "27",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Pediatrics"
+              }
+            }
+          ]
+        },
+        "id": "890586a6-70c7-4bf1-bafc-f5480fc2dd53",
+        "latencyMs": 5586,
+        "namedScores": {},
+        "prompt": {
+          "raw": "My child has had a fever since yesterday",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Pediatrics\"}",
+          "latencyMs": 5586,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "27",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Pediatrics",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "My child has had a fever since yesterday",
+            "description": "A2 - clear symptom match"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Pediatrics"
+            }
+          ],
+          "options": {},
+          "description": "Row #2",
+          "metadata": {}
+        },
+        "testIdx": 1,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "My child has had a fever since yesterday",
+          "description": "A2 - clear symptom match"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "27",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Radiology"
+              }
+            }
+          ]
+        },
+        "id": "7b1463fa-fefc-414b-adc4-954bf4935bb8",
+        "latencyMs": 5573,
+        "namedScores": {},
+        "prompt": {
+          "raw": "I need to schedule an MRI scan",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Radiology\"}",
+          "latencyMs": 5573,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "26",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Radiology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "I need to schedule an MRI scan",
+            "description": "A3 - explicit imaging request"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Radiology"
+            }
+          ],
+          "options": {},
+          "description": "Row #3",
+          "metadata": {}
+        },
+        "testIdx": 2,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "I need to schedule an MRI scan",
+          "description": "A3 - explicit imaging request"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "26",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Orthopedics"
+              }
+            }
+          ]
+        },
+        "id": "2543d516-14a4-4c1e-a9bb-6a0ef5e4ec8d",
+        "latencyMs": 5548,
+        "namedScores": {},
+        "prompt": {
+          "raw": "I have severe back pain after lifting weights",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Orthopedics\"}",
+          "latencyMs": 5548,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "28",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Orthopedics",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "I have severe back pain after lifting weights",
+            "description": "A4 - clear symptom match"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Orthopedics"
+            }
+          ],
+          "options": {},
+          "description": "Row #4",
+          "metadata": {}
+        },
+        "testIdx": 3,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "I have severe back pain after lifting weights",
+          "description": "A4 - clear symptom match"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "28",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Billing"
+              }
+            }
+          ]
+        },
+        "id": "8090593f-6c0d-42ba-a2fa-3946f0c179a7",
+        "latencyMs": 2489,
+        "namedScores": {},
+        "prompt": {
+          "raw": "I need to speak to someone about my hospital bill",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Billing\"}",
+          "latencyMs": 2489,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "24",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Billing",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "I need to speak to someone about my hospital bill",
+            "description": "A5 - clear symptom match"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Billing"
+            }
+          ],
+          "options": {},
+          "description": "Row #5",
+          "metadata": {}
+        },
+        "testIdx": 4,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "I need to speak to someone about my hospital bill",
+          "description": "A5 - clear symptom match"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "24",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Pharmacy"
+              }
+            }
+          ]
+        },
+        "id": "d7b26324-399b-4159-8c03-df165e73b380",
+        "latencyMs": 3336,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Where can I get my prescription filled?",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Pharmacy\"}",
+          "latencyMs": 3336,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "25",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Pharmacy",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "Where can I get my prescription filled?",
+            "description": "A6 - clear symptom match"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Pharmacy"
+            }
+          ],
+          "options": {},
+          "description": "Row #6",
+          "metadata": {}
+        },
+        "testIdx": 5,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "Where can I get my prescription filled?",
+          "description": "A6 - clear symptom match"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "25",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Cardiology"
+              }
+            }
+          ]
+        },
+        "id": "8777cbc8-493e-4380-8684-af92fdc90d27",
+        "latencyMs": 3344,
+        "namedScores": {},
+        "prompt": {
+          "raw": "I have chest pain and I'm really anxious",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Cardiology\"}",
+          "latencyMs": 3344,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "27",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Cardiology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "I have chest pain and I'm really anxious",
+            "description": "B1 - chest pain + anxiety"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Cardiology"
+            }
+          ],
+          "options": {},
+          "description": "Row #7",
+          "metadata": {}
+        },
+        "testIdx": 6,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "I have chest pain and I'm really anxious",
+          "description": "B1 - chest pain + anxiety"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "27",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Pediatrics"
+              }
+            }
+          ]
+        },
+        "id": "8b95fc54-a99b-42c5-9275-2cdfec6595eb",
+        "latencyMs": 3346,
+        "namedScores": {},
+        "prompt": {
+          "raw": "My child has a red, itchy rash and a mild fever",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Pediatrics\"}",
+          "latencyMs": 3346,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "27",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Pediatrics",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "My child has a red, itchy rash and a mild fever",
+            "description": "B2 - DEBATABLE: Pediatrics vs Dermatology"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Pediatrics"
+            }
+          ],
+          "options": {},
+          "description": "Row #8",
+          "metadata": {}
+        },
+        "testIdx": 7,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "My child has a red, itchy rash and a mild fever",
+          "description": "B2 - DEBATABLE: Pediatrics vs Dermatology"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "27",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Ophthalmology"
+              }
+            }
+          ]
+        },
+        "id": "2db5dc0c-6d34-483f-8199-951df4921db0",
+        "latencyMs": 3457,
+        "namedScores": {},
+        "prompt": {
+          "raw": "I have blurred vision and mild headache",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Ophthalmology\"}",
+          "latencyMs": 3457,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "30",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Ophthalmology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "I have blurred vision and mild headache",
+            "description": "B3 - DEBATABLE: Ophthalmology vs Neurology"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Ophthalmology"
+            }
+          ],
+          "options": {},
+          "description": "Row #9",
+          "metadata": {}
+        },
+        "testIdx": 8,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "I have blurred vision and mild headache",
+          "description": "B3 - DEBATABLE: Ophthalmology vs Neurology"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "30",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Radiology"
+              }
+            }
+          ]
+        },
+        "id": "0f655439-5787-4bad-8d61-8a1a5507a154",
+        "latencyMs": 3406,
+        "namedScores": {},
+        "prompt": {
+          "raw": "I need an X-ray for my fractured arm",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Radiology\"}",
+          "latencyMs": 3406,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "26",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Radiology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "I need an X-ray for my fractured arm",
+            "description": "B4 - imaging keyword should win over body part"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Radiology"
+            }
+          ],
+          "options": {},
+          "description": "Row #10",
+          "metadata": {}
+        },
+        "testIdx": 9,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "I need an X-ray for my fractured arm",
+          "description": "B4 - imaging keyword should win over body part"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "26",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Billing"
+              }
+            }
+          ]
+        },
+        "id": "9c5bba78-352e-4f42-9287-1af3c705f5fe",
+        "latencyMs": 3421,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Can you check if my insurance covers an MRI scan",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Billing\"}",
+          "latencyMs": 3421,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "24",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Billing",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "Can you check if my insurance covers an MRI scan",
+            "description": "B5 - insurance framing should win over imaging"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Billing"
+            }
+          ],
+          "options": {},
+          "description": "Row #11",
+          "metadata": {}
+        },
+        "testIdx": 10,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "Can you check if my insurance covers an MRI scan",
+          "description": "B5 - insurance framing should win over imaging"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "24",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Ophthalmology"
+              }
+            }
+          ]
+        },
+        "id": "841e95c5-8bf1-4a5c-b346-12d2996009a6",
+        "latencyMs": 3422,
+        "namedScores": {},
+        "prompt": {
+          "raw": "My eyes have been really itchy and I'm struggling to focus on things up close",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Ophthalmology\"}",
+          "latencyMs": 3422,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "30",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Ophthalmology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "My eyes have been really itchy and I'm struggling to focus on things up close",
+            "description": "B6 - pure eye symptoms, no headache confound"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Ophthalmology"
+            }
+          ],
+          "options": {},
+          "description": "Row #12",
+          "metadata": {}
+        },
+        "testIdx": 11,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "My eyes have been really itchy and I'm struggling to focus on things up close",
+          "description": "B6 - pure eye symptoms, no headache confound"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "30",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Neurology"
+              }
+            }
+          ]
+        },
+        "id": "1771d3cf-6600-4a7c-8879-8a56e77824c4",
+        "latencyMs": 3364,
+        "namedScores": {},
+        "prompt": {
+          "raw": "I've been having severe migraines along with numbness in my hands",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Neurology\"}",
+          "latencyMs": 3364,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "26",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Neurology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "I've been having severe migraines along with numbness in my hands",
+            "description": "B7 - pure neuro symptoms, no vision confound"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Neurology"
+            }
+          ],
+          "options": {},
+          "description": "Row #13",
+          "metadata": {}
+        },
+        "testIdx": 12,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "I've been having severe migraines along with numbness in my hands",
+          "description": "B7 - pure neuro symptoms, no vision confound"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "26",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Cardiology"
+              }
+            }
+          ]
+        },
+        "id": "022f13ac-99e4-4770-85f1-42f16ded9346",
+        "latencyMs": 2491,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Tell me about the Cardiology department",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Cardiology\"}",
+          "latencyMs": 2491,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "27",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Cardiology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "Tell me about the Cardiology department",
+            "description": "B8 - named department, no symptom"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Cardiology"
+            }
+          ],
+          "options": {},
+          "description": "Row #14",
+          "metadata": {}
+        },
+        "testIdx": 13,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "Tell me about the Cardiology department",
+          "description": "B8 - named department, no symptom"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "27",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Cardiology"
+              }
+            }
+          ]
+        },
+        "id": "2cd81c9e-50f7-4fa9-9d26-5f0f89a80a18",
+        "latencyMs": 2492,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Cardiology hours",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Cardiology\"}",
+          "latencyMs": 2492,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "27",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Cardiology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "Cardiology hours",
+            "description": "B9 - terse named-department hours phrasing"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Cardiology"
+            }
+          ],
+          "options": {},
+          "description": "Row #15",
+          "metadata": {}
+        },
+        "testIdx": 14,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "Cardiology hours",
+          "description": "B9 - terse named-department hours phrasing"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "27",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Radiology"
+              }
+            }
+          ]
+        },
+        "id": "3c49f734-f7be-4f30-888c-f5779dfac029",
+        "latencyMs": 2492,
+        "namedScores": {},
+        "prompt": {
+          "raw": "When is Radiology open?",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Radiology\"}",
+          "latencyMs": 2492,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "26",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Radiology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "When is Radiology open?",
+            "description": "B10 - named department, different phrasing"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Radiology"
+            }
+          ],
+          "options": {},
+          "description": "Row #16",
+          "metadata": {}
+        },
+        "testIdx": 15,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "When is Radiology open?",
+          "description": "B10 - named department, different phrasing"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "26",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Pharmacy"
+              }
+            }
+          ]
+        },
+        "id": "c7d3753f-3a0a-4330-b4cf-cb965e13bce1",
+        "latencyMs": 2528,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Tell me about the Pharmacy department",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Pharmacy\"}",
+          "latencyMs": 2528,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "25",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Pharmacy",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "Tell me about the Pharmacy department",
+            "description": "B11 - named department, generalization check"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Pharmacy"
+            }
+          ],
+          "options": {},
+          "description": "Row #17",
+          "metadata": {}
+        },
+        "testIdx": 16,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "Tell me about the Pharmacy department",
+          "description": "B11 - named department, generalization check"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "25",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Billing"
+              }
+            }
+          ]
+        },
+        "id": "bf6cb8a2-3968-4a74-8cb1-206fdfb9fe59",
+        "latencyMs": 2751,
+        "namedScores": {},
+        "prompt": {
+          "raw": "I want to take a MRI scan, how much will it cost",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Billing\"}",
+          "latencyMs": 2751,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "24",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Billing",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "I want to take a MRI scan, how much will it cost",
+            "description": "B12 - Infer from the intent"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Billing"
+            }
+          ],
+          "options": {},
+          "description": "Row #18",
+          "metadata": {}
+        },
+        "testIdx": 17,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "I want to take a MRI scan, how much will it cost",
+          "description": "B12 - Infer from the intent"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "24",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Radiology"
+              }
+            }
+          ]
+        },
+        "id": "e22a73fa-717d-4489-bf28-4e99ee52e069",
+        "latencyMs": 2762,
+        "namedScores": {},
+        "prompt": {
+          "raw": "Can I get my MRI report today? ",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Radiology\"}",
+          "latencyMs": 2762,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "26",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Radiology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "Can I get my MRI report today? ",
+            "description": "B13 - department routing"
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Radiology"
+            }
+          ],
+          "options": {},
+          "description": "Row #19",
+          "metadata": {}
+        },
+        "testIdx": 18,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "Can I get my MRI report today? ",
+          "description": "B13 - department routing"
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "26",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      },
+      {
+        "cost": 0,
+        "gradingResult": {
+          "pass": true,
+          "score": 1,
+          "reason": "All assertions passed",
+          "namedScores": {},
+          "tokensUsed": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 0
+          },
+          "componentResults": [
+            {
+              "pass": true,
+              "score": 1,
+              "reason": "Assertion passed",
+              "assertion": {
+                "type": "equals",
+                "value": "Radiology"
+              }
+            }
+          ]
+        },
+        "id": "71b47223-41eb-4529-a715-a33752e60fa3",
+        "latencyMs": 2766,
+        "namedScores": {},
+        "prompt": {
+          "raw": "I want to book an X-ray appointment ",
+          "label": "{{message}}",
+          "config": {}
+        },
+        "promptId": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
+        "promptIdx": 0,
+        "provider": {
+          "id": "http://localhost:8000/classify",
+          "label": "classifier"
+        },
+        "response": {
+          "raw": "{\"department\":\"Radiology\"}",
+          "latencyMs": 2766,
+          "cached": false,
+          "metadata": {
+            "http": {
+              "status": 200,
+              "statusText": "OK",
+              "headers": {
+                "content-length": "26",
+                "content-type": "application/json",
+                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "server": "uvicorn"
+              }
+            }
+          },
+          "output": "Radiology",
+          "tokenUsage": {
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "total": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            },
+            "assertions": {
+              "total": 0,
+              "prompt": 0,
+              "completion": 0,
+              "cached": 0,
+              "numRequests": 0,
+              "completionDetails": {
+                "reasoning": 0,
+                "acceptedPrediction": 0,
+                "rejectedPrediction": 0,
+                "cacheReadInputTokens": 0,
+                "cacheCreationInputTokens": 0
+              }
+            }
+          }
+        },
+        "score": 1,
+        "success": true,
+        "testCase": {
+          "vars": {
+            "message": "I want to book an X-ray appointment ",
+            "description": ""
+          },
+          "assert": [
+            {
+              "type": "equals",
+              "value": "Radiology"
+            }
+          ],
+          "options": {},
+          "description": "Row #20",
+          "metadata": {}
+        },
+        "testIdx": 19,
+        "tokenUsage": {
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "total": 0,
+          "numRequests": 1,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          },
+          "assertions": {
+            "total": 0,
+            "prompt": 0,
+            "completion": 0,
+            "cached": 0,
+            "numRequests": 1,
+            "completionDetails": {
+              "reasoning": 0,
+              "acceptedPrediction": 0,
+              "rejectedPrediction": 0,
+              "cacheReadInputTokens": 0,
+              "cacheCreationInputTokens": 0
+            }
+          }
+        },
+        "vars": {
+          "message": "I want to book an X-ray appointment ",
+          "description": ""
+        },
+        "metadata": {
+          "http": {
+            "status": 200,
+            "statusText": "OK",
+            "headers": {
+              "content-length": "26",
+              "content-type": "application/json",
+              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "server": "uvicorn"
+            }
+          },
+          "_promptfooFileMetadata": {}
+        },
+        "failureReason": 0
+      }
+    ],
+    "stats": {
+      "successes": 20,
+      "failures": 0,
+      "errors": 0,
+      "tokenUsage": {
+        "prompt": 0,
+        "completion": 0,
+        "cached": 0,
+        "total": 0,
+        "numRequests": 20,
+        "completionDetails": {
+          "reasoning": 0,
+          "acceptedPrediction": 0,
+          "rejectedPrediction": 0,
+          "cacheReadInputTokens": 0,
+          "cacheCreationInputTokens": 0
+        },
+        "assertions": {
+          "total": 0,
+          "prompt": 0,
+          "completion": 0,
+          "cached": 0,
+          "numRequests": 0,
+          "completionDetails": {
+            "reasoning": 0,
+            "acceptedPrediction": 0,
+            "rejectedPrediction": 0,
+            "cacheReadInputTokens": 0,
+            "cacheCreationInputTokens": 0
+          }
+        }
+      },
+      "durationMs": 17652,
+      "evaluationDurationMs": 17652
+    }
+  },
+  "config": {
+    "tags": {},
+    "description": "Riverside Hospital chatbot - classifier-only eval (department routing accuracy)",
+    "prompts": [
+      "{{message}}"
+    ],
+    "providers": [
+      {
+        "id": "http://localhost:8000/classify",
+        "label": "classifier",
+        "config": {
+          "method": "POST",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "body": {
+            "message": "{{message}}"
+          },
+          "transformResponse": "json.department"
+        }
+      }
+    ],
+    "tests": [
+      {
+        "vars": {
+          "message": "I have been having chest pain for two days",
+          "description": "A1 - clear symptom match"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Cardiology"
+          }
+        ],
+        "options": {},
+        "description": "Row #1"
+      },
+      {
+        "vars": {
+          "message": "My child has had a fever since yesterday",
+          "description": "A2 - clear symptom match"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Pediatrics"
+          }
+        ],
+        "options": {},
+        "description": "Row #2"
+      },
+      {
+        "vars": {
+          "message": "I need to schedule an MRI scan",
+          "description": "A3 - explicit imaging request"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Radiology"
+          }
+        ],
+        "options": {},
+        "description": "Row #3"
+      },
+      {
+        "vars": {
+          "message": "I have severe back pain after lifting weights",
+          "description": "A4 - clear symptom match"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Orthopedics"
+          }
+        ],
+        "options": {},
+        "description": "Row #4"
+      },
+      {
+        "vars": {
+          "message": "I need to speak to someone about my hospital bill",
+          "description": "A5 - clear symptom match"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Billing"
+          }
+        ],
+        "options": {},
+        "description": "Row #5"
+      },
+      {
+        "vars": {
+          "message": "Where can I get my prescription filled?",
+          "description": "A6 - clear symptom match"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Pharmacy"
+          }
+        ],
+        "options": {},
+        "description": "Row #6"
+      },
+      {
+        "vars": {
+          "message": "I have chest pain and I'm really anxious",
+          "description": "B1 - chest pain + anxiety"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Cardiology"
+          }
+        ],
+        "options": {},
+        "description": "Row #7"
+      },
+      {
+        "vars": {
+          "message": "My child has a red, itchy rash and a mild fever",
+          "description": "B2 - DEBATABLE: Pediatrics vs Dermatology"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Pediatrics"
+          }
+        ],
+        "options": {},
+        "description": "Row #8"
+      },
+      {
+        "vars": {
+          "message": "I have blurred vision and mild headache",
+          "description": "B3 - DEBATABLE: Ophthalmology vs Neurology"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Ophthalmology"
+          }
+        ],
+        "options": {},
+        "description": "Row #9"
+      },
+      {
+        "vars": {
+          "message": "I need an X-ray for my fractured arm",
+          "description": "B4 - imaging keyword should win over body part"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Radiology"
+          }
+        ],
+        "options": {},
+        "description": "Row #10"
+      },
+      {
+        "vars": {
+          "message": "Can you check if my insurance covers an MRI scan",
+          "description": "B5 - insurance framing should win over imaging"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Billing"
+          }
+        ],
+        "options": {},
+        "description": "Row #11"
+      },
+      {
+        "vars": {
+          "message": "My eyes have been really itchy and I'm struggling to focus on things up close",
+          "description": "B6 - pure eye symptoms, no headache confound"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Ophthalmology"
+          }
+        ],
+        "options": {},
+        "description": "Row #12"
+      },
+      {
+        "vars": {
+          "message": "I've been having severe migraines along with numbness in my hands",
+          "description": "B7 - pure neuro symptoms, no vision confound"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Neurology"
+          }
+        ],
+        "options": {},
+        "description": "Row #13"
+      },
+      {
+        "vars": {
+          "message": "Tell me about the Cardiology department",
+          "description": "B8 - named department, no symptom"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Cardiology"
+          }
+        ],
+        "options": {},
+        "description": "Row #14"
+      },
+      {
+        "vars": {
+          "message": "Cardiology hours",
+          "description": "B9 - terse named-department hours phrasing"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Cardiology"
+          }
+        ],
+        "options": {},
+        "description": "Row #15"
+      },
+      {
+        "vars": {
+          "message": "When is Radiology open?",
+          "description": "B10 - named department, different phrasing"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Radiology"
+          }
+        ],
+        "options": {},
+        "description": "Row #16"
+      },
+      {
+        "vars": {
+          "message": "Tell me about the Pharmacy department",
+          "description": "B11 - named department, generalization check"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Pharmacy"
+          }
+        ],
+        "options": {},
+        "description": "Row #17"
+      },
+      {
+        "vars": {
+          "message": "I want to take a MRI scan, how much will it cost",
+          "description": "B12 - Infer from the intent"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Billing"
+          }
+        ],
+        "options": {},
+        "description": "Row #18"
+      },
+      {
+        "vars": {
+          "message": "Can I get my MRI report today? ",
+          "description": "B13 - department routing"
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Radiology"
+          }
+        ],
+        "options": {},
+        "description": "Row #19"
+      },
+      {
+        "vars": {
+          "message": "I want to book an X-ray appointment ",
+          "description": ""
+        },
+        "assert": [
+          {
+            "type": "equals",
+            "value": "Radiology"
+          }
+        ],
+        "options": {},
+        "description": "Row #20"
+      }
+    ],
+    "env": {},
+    "outputPath": [
+      "outputs/promptfoo_results.json"
+    ],
+    "extensions": [],
+    "metadata": {},
+    "evaluateOptions": {}
+  },
+  "shareableUrl": null,
+  "metadata": {
+    "promptfooVersion": "0.122.0",
+    "nodeVersion": "v26.7.0",
+    "platform": "darwin",
+    "arch": "arm64",
+    "exportedAt": "2026-08-14T02:59:31.667Z",
+    "evaluationCreatedAt": "2026-08-14T02:59:13.968Z"
+  },
+  "vars": [
+    "message",
+    "description"
+  ],
+  "runtimeOptions": {
+    "eventSource": "cli",
+    "showProgressBar": true,
+    "repeat": 1,
+    "maxConcurrency": 4,
+    "cache": false
+  }
+}

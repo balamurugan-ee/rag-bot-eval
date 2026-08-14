@@ -1,0 +1,9 @@
+,pred:Billing,pred:Cardiology,pred:Neurology,pred:Ophthalmology,pred:Orthopedics,pred:Pediatrics,pred:Pharmacy,pred:Radiology
+true:Billing,3,0,0,0,0,0,0,0
+true:Cardiology,0,4,0,0,0,0,0,0
+true:Neurology,0,0,1,0,0,0,0,0
+true:Ophthalmology,0,0,0,2,0,0,0,0
+true:Orthopedics,0,0,0,0,1,0,0,0
+true:Pediatrics,0,0,0,0,0,2,0,0
+true:Pharmacy,0,0,0,0,0,0,2,0
+true:Radiology,0,0,0,0,0,0,0,5

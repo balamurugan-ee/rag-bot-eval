@@ -72,9 +72,39 @@ Health check.
 
 ## Evaluation
 
+### Run Promptfoo Evaluation
+
 ```bash
-promptfoo eval -c promptfooconfig.yaml
+promptfoo eval -c promptfoo.classify.yaml
 ```
+
+### Generate Confusion Matrix & Metrics
+
+Export Promptfoo results and generate confusion matrix with accuracy, precision, recall, F1-scores:
+
+```bash
+chmod +x scripts/export_and_analyze.sh
+./scripts/export_and_analyze.sh promptfoo.classify.yaml
+```
+
+Or manually:
+
+```bash
+# Export results
+promptfoo eval -c promptfoo.classify.yaml --output outputs/promptfoo_results.json
+
+# Generate confusion matrix
+python scripts/build_confusion_matrix.py --input outputs/promptfoo_results.json
+```
+
+### Output Files
+
+Results saved to `outputs/`:
+- `confusion_matrix.png` - Heatmap visualization
+- `confusion_matrix.csv` - Confusion matrix data
+- `classification_report.txt` - Precision, recall, F1 per class
+- `metrics_summary.json` - All metrics in JSON
+- `detailed_results.csv` - Test cases with predictions
 
 Test cases: `tests/classification_ground_truth.csv`
 

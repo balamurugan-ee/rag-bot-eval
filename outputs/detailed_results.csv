@@ -1,0 +1,21 @@
+message,expected,predicted,correct
+I have been having chest pain for two days,Cardiology,Cardiology,True
+My child has had a fever since yesterday,Pediatrics,Pediatrics,True
+I need to schedule an MRI scan,Radiology,Radiology,True
+I have severe back pain after lifting weights,Orthopedics,Orthopedics,True
+I need to speak to someone about my hospital bill,Billing,Billing,True
+Where can I get my prescription filled?,Pharmacy,Pharmacy,True
+I have chest pain and I'm really anxious,Cardiology,Cardiology,True
+"My child has a red, itchy rash and a mild fever",Pediatrics,Pediatrics,True
+I have blurred vision and mild headache,Ophthalmology,Ophthalmology,True
+I need an X-ray for my fractured arm,Radiology,Radiology,True
+Can you check if my insurance covers an MRI scan,Billing,Billing,True
+My eyes have been really itchy and I'm struggling to focus on things up close,Ophthalmology,Ophthalmology,True
+I've been having severe migraines along with numbness in my hands,Neurology,Neurology,True
+Tell me about the Cardiology department,Cardiology,Cardiology,True
+Cardiology hours,Cardiology,Cardiology,True
+When is Radiology open?,Radiology,Radiology,True
+Tell me about the Pharmacy department,Pharmacy,Pharmacy,True
+"I want to take a MRI scan, how much will it cost",Billing,Billing,True
+Can I get my MRI report today? ,Radiology,Radiology,True
+I want to book an X-ray appointment ,Radiology,Radiology,True
