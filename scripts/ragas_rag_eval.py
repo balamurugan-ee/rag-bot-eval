@@ -1,32 +1,27 @@
 """
-Ragas eval for the RAG receptionist, testing the REAL /chat endpoint.
+Ragas evaluation for RAG receptionist, testing the REAL /chat endpoint.
 
-Five metrics -- the two reference-based ones need the expected_answer
-column in tests/rag_ground_truth.csv:
-  - Faithfulness (reference-free): does the answer only contain claims
-    traceable to the retrieved context?
-  - Answer Relevancy (reference-free): does the answer actually address
-    the question asked?
-  - Context Precision (reference-based): of the retrieved chunks, how many
-    were relevant to producing the expected answer?
-  - Context Recall (reference-based): did retrieval fetch everything needed
-    to support the expected answer?
-  - Answer Correctness (reference-based): does the answer match the
-    expected answer, factually (TP/FP/FN claim overlap) and semantically?
+RETRIEVAL METRICS (evaluate quality of retrieved context):
+  - Context Precision: Of the retrieved chunks, how many were relevant to 
+    producing the expected answer?
+  - Context Recall: Did retrieval fetch everything needed to support the 
+    expected answer?
 
-The answer being graded always comes from a real HTTP call to /chat -- not
-from calling ReceptionistBot directly -- so this tests what's actually
-deployed. retrieved_contexts come from an independent, read-only vector
-store call, since /chat only returns {response} by design.
+GENERATION METRICS (evaluate quality of generated answer):
+  - Faithfulness: Does the answer only contain claims traceable to the 
+    retrieved context?
+  - Answer Relevancy: Does the answer actually address the question asked?
+  - Answer Correctness: Does the answer match the expected answer, both 
+    factually (TP/FP/FN claim overlap) and semantically?
 
-Each metric's .score()/.ascore() shortcut only returns the final number and
-throws away its own intermediate reasoning -- so this script calls the same
-internal pieces ascore() calls directly, to capture *why* each score came
-out the way it did, not just the number.
+The answer being graded comes from a real HTTP call to /chat, testing what's
+actually deployed. Retrieved contexts come from an independent vector store
+call since /chat only returns {response}.
 
-Output: printed per-question reasoning, a full JSON dump, and an interactive
-HTML report (tests/ragas_report.html) -- regenerated on every run from
-scripts/ragas_report_template.html, so the report is never a stale one-off.
+This script captures full reasoning for each metric, not just final scores.
+
+Output: Console output with reasoning, JSON dump (tests/ragas_results.json),
+and interactive HTML report (tests/ragas_report.html).
 """
 import asyncio
 import csv
@@ -41,9 +36,9 @@ from ragas.embeddings import embedding_factory
 from ragas.metrics.collections import (
     Faithfulness,
     AnswerRelevancy,
-    ContextPrecisionWithReference,
-    ContextRecall,
     AnswerCorrectness,
+    ContextPrecisionWithReference,
+    ContextRecall
 )
 from ragas.metrics.collections.context_precision.metric import ContextPrecisionInput, ContextPrecisionOutput
 from ragas.metrics.collections.answer_relevancy.metric import AnswerRelevanceInput, AnswerRelevanceOutput
@@ -79,94 +74,106 @@ def get_real_answer(question: str) -> str:
     return response.json()["response"]
 
 
-async def score_faithfulness(metric: Faithfulness, question: str, answer: str, contexts: list[str]):
-    statements = await metric._create_statements(question, answer)
-    if not statements:
-        return float("nan"), []
-
-    context_str = "\n".join(contexts)
-    verdicts = await metric._create_verdicts(statements, context_str)
-    score = metric._compute_score(verdicts)
-
-    reasoning = [
-        {"statement": s.statement, "faithful": bool(s.verdict), "reason": s.reason}
-        for s in verdicts.statements
-    ]
-    return float(score), reasoning
-
-
-async def score_answer_relevancy(metric: AnswerRelevancy, question: str, answer: str):
-    generated_questions = []
-    noncommittal_flags = []
-
-    for _ in range(metric.strictness):
-        input_data = AnswerRelevanceInput(response=answer)
-        prompt_string = metric.prompt.to_string(input_data)
-        result = await metric.llm.agenerate(prompt_string, AnswerRelevanceOutput)
-        if result.question:
-            generated_questions.append(result.question)
-            noncommittal_flags.append(result.noncommittal)
-
-    if not generated_questions:
-        return 0.0, []
-
-    all_noncommittal = bool(np.all(noncommittal_flags))
-    question_vec = np.asarray(await metric.embeddings.aembed_text(question)).reshape(1, -1)
-    gen_question_vec = np.asarray(await metric.embeddings.aembed_texts(generated_questions)).reshape(len(generated_questions), -1)
-    norm = np.linalg.norm(gen_question_vec, axis=1) * np.linalg.norm(question_vec, axis=1)
-    cosine_sim = np.dot(gen_question_vec, question_vec.T).reshape(-1) / norm
-
-    score = float(cosine_sim.mean() * int(not all_noncommittal))
-    reasoning = [
-        {"generated_question": q, "similarity_to_original": float(sim), "noncommittal": bool(nc)}
-        for q, sim, nc in zip(generated_questions, cosine_sim, noncommittal_flags)
-    ]
-    return score, reasoning
-
-
-async def score_context_precision(metric: ContextPrecisionWithReference, question: str, expected_answer: str, contexts: list[str]):
-    """Judges each retrieved chunk against the EXPECTED answer, not the system's own answer."""
+async def score_retrieval_metrics(metrics: dict, question: str, expected_answer: str, contexts: list[str]) -> dict:
+    """
+    Score retrieval metrics: Context Precision and Context Recall.
+    These metrics evaluate the quality of retrieved context chunks.
+    """
+    results = {}
+    
+    # Context Precision - judges each chunk against expected answer
+    metric = metrics['context_precision']
     verdicts = []
-    reasoning = []
+    precision_reasoning = []
     for context in contexts:
         input_data = ContextPrecisionInput(question=question, context=context, answer=expected_answer)
-        prompt_string = metric.prompt.to_string(input_data)
-        result = await metric.llm.agenerate(prompt_string, ContextPrecisionOutput)
+        result = await metric.llm.agenerate(metric.prompt.to_string(input_data), ContextPrecisionOutput)
         verdicts.append(result.verdict)
-        reasoning.append({
+        precision_reasoning.append({
             "context_preview": context[:120] + ("..." if len(context) > 120 else ""),
             "relevant": bool(result.verdict),
             "reason": result.reason,
         })
+    results['context_precision'] = {
+        'score': float(metric._calculate_average_precision(verdicts)),
+        'reasoning': precision_reasoning
+    }
 
-    score = metric._calculate_average_precision(verdicts)
-    return float(score), reasoning
-
-
-async def score_context_recall(metric: ContextRecall, question: str, expected_answer: str, contexts: list[str]):
-    """Checks whether the retrieved context supports every claim in the EXPECTED answer."""
+    # Context Recall - checks if context supports expected answer
+    metric = metrics['context_recall']
     context_str = "\n".join(contexts)
     input_data = ContextRecallInput(question=question, context=context_str, answer=expected_answer)
-    prompt_string = metric.prompt.to_string(input_data)
-    result = await metric.llm.agenerate(prompt_string, ContextRecallOutput)
+    result = await metric.llm.agenerate(metric.prompt.to_string(input_data), ContextRecallOutput)
+    if result.classifications:
+        attributions = [c.attributed for c in result.classifications]
+        results['context_recall'] = {
+            'score': float(sum(attributions) / len(attributions)),
+            'reasoning': [
+                {"statement": c.statement, "attributed": bool(c.attributed), "reason": c.reason}
+                for c in result.classifications
+            ]
+        }
+    else:
+        results['context_recall'] = {'score': float("nan"), 'reasoning': []}
+    
+    return results
 
-    if not result.classifications:
-        return float("nan"), []
 
-    attributions = [c.attributed for c in result.classifications]
-    score = sum(attributions) / len(attributions)
+async def score_generation_metrics(metrics: dict, question: str, answer: str, expected_answer: str, contexts: list[str]) -> dict:
+    """
+    Score generation metrics: Faithfulness, Answer Relevancy, and Answer Correctness.
+    These metrics evaluate the quality of the generated answer.
+    """
+    results = {}
+    context_str = "\n".join(contexts)
+    
+    # Faithfulness - does answer contain only claims traceable to context?
+    metric = metrics['faithfulness']
+    statements = await metric._create_statements(question, answer)
+    if statements:
+        verdicts = await metric._create_verdicts(statements, context_str)
+        results['faithfulness'] = {
+            'score': float(metric._compute_score(verdicts)),
+            'reasoning': [
+                {"statement": s.statement, "faithful": bool(s.verdict), "reason": s.reason}
+                for s in verdicts.statements
+            ]
+        }
+    else:
+        results['faithfulness'] = {'score': float("nan"), 'reasoning': []}
 
-    reasoning = [
-        {"statement": c.statement, "attributed": bool(c.attributed), "reason": c.reason}
-        for c in result.classifications
-    ]
-    return float(score), reasoning
+    # Answer Relevancy - does answer address the question?
+    metric = metrics['answer_relevancy']
+    generated_questions = []
+    noncommittal_flags = []
+    for _ in range(metric.strictness):
+        input_data = AnswerRelevanceInput(response=answer)
+        result = await metric.llm.agenerate(metric.prompt.to_string(input_data), AnswerRelevanceOutput)
+        if result.question:
+            generated_questions.append(result.question)
+            noncommittal_flags.append(result.noncommittal)
+    
+    if generated_questions:
+        all_noncommittal = bool(np.all(noncommittal_flags))
+        question_vec = np.asarray(await metric.embeddings.aembed_text(question)).reshape(1, -1)
+        gen_question_vec = np.asarray(await metric.embeddings.aembed_texts(generated_questions)).reshape(len(generated_questions), -1)
+        norm = np.linalg.norm(gen_question_vec, axis=1) * np.linalg.norm(question_vec, axis=1)
+        cosine_sim = np.dot(gen_question_vec, question_vec.T).reshape(-1) / norm
+        results['answer_relevancy'] = {
+            'score': float(cosine_sim.mean() * int(not all_noncommittal)),
+            'reasoning': [
+                {"generated_question": q, "similarity_to_original": float(sim), "noncommittal": bool(nc)}
+                for q, sim, nc in zip(generated_questions, cosine_sim, noncommittal_flags)
+            ]
+        }
+    else:
+        results['answer_relevancy'] = {'score': 0.0, 'reasoning': []}
 
-
-async def score_answer_correctness(metric: AnswerCorrectness, question: str, answer: str, expected_answer: str):
+    # Answer Correctness - does answer match expected answer factually and semantically?
+    metric = metrics['answer_correctness']
     response_statements = await metric._generate_statements(question, answer)
     reference_statements = await metric._generate_statements(question, expected_answer)
-
+    
     if response_statements and reference_statements:
         classification = await metric._classify_statements(question, response_statements, reference_statements)
         factuality_score = metric._compute_f1_score(classification)
@@ -178,19 +185,58 @@ async def score_answer_correctness(metric: AnswerCorrectness, question: str, ans
     else:
         factuality_score = 1.0
         claim_reasoning = {"true_positive": [], "false_positive": [], "false_negative": []}
-
+    
     similarity_score = await metric._calculate_similarity(answer, expected_answer)
-    final_score = float(np.average([factuality_score, similarity_score], weights=metric.weights))
-
-    reasoning = {
-        "factuality_score": float(factuality_score),
-        "similarity_score": float(similarity_score),
-        **claim_reasoning,
+    results['answer_correctness'] = {
+        'score': float(np.average([factuality_score, similarity_score], weights=metric.weights)),
+        'reasoning': {
+            "factuality_score": float(factuality_score),
+            "similarity_score": float(similarity_score),
+            **claim_reasoning,
+        }
     }
-    return final_score, reasoning
+    
+    return results
+
+
+def print_results(retrieval_scores: dict, generation_scores: dict):
+    """Print organized results by metric category."""
+    
+    # Retrieval Metrics
+    print("\n=== RETRIEVAL METRICS ===")
+    
+    print(f"\nContext Precision: {retrieval_scores['context_precision']['score']:.2f}")
+    for r in retrieval_scores['context_precision']['reasoning']:
+        print(f"  [{'RELEVANT' if r['relevant'] else 'NOT RELEVANT'}] {r['context_preview']}")
+    
+    print(f"\nContext Recall: {retrieval_scores['context_recall']['score']:.2f}")
+    for r in retrieval_scores['context_recall']['reasoning']:
+        print(f"  [{'ATTRIBUTED' if r['attributed'] else 'NOT ATTRIBUTED'}] {r['statement']}")
+    
+    # Generation Metrics
+    print("\n=== GENERATION METRICS ===")
+    
+    print(f"\nFaithfulness: {generation_scores['faithfulness']['score']:.2f}")
+    for r in generation_scores['faithfulness']['reasoning']:
+        print(f"  [{'OK' if r['faithful'] else 'UNFAITHFUL'}] {r['statement']}")
+    
+    print(f"\nAnswer Relevancy: {generation_scores['answer_relevancy']['score']:.2f}")
+    for r in generation_scores['answer_relevancy']['reasoning'][:1]:
+        print(f"  reverse-engineered Q: {r['generated_question']} (sim={r['similarity_to_original']:.2f})")
+    
+    correctness = generation_scores['answer_correctness']
+    print(f"\nAnswer Correctness: {correctness['score']:.2f}")
+    print(f"  (factuality={correctness['reasoning']['factuality_score']:.2f}, similarity={correctness['reasoning']['similarity_score']:.2f})")
+    for s in correctness['reasoning']["true_positive"]:
+        print(f"  [MATCH] {s['statement']}")
+    for s in correctness['reasoning']["false_positive"]:
+        print(f"  [EXTRA/WRONG] {s['statement']}")
+    for s in correctness['reasoning']["false_negative"]:
+        print(f"  [MISSING] {s['statement']}")
 
 
 async def main():
+    # Initialize services
     vector_store = VectorStoreManager()
     vector_store.initialize()
 
@@ -198,72 +244,68 @@ async def main():
     ragas_llm = llm_factory("gpt-4o-mini", client=client)
     ragas_embeddings = embedding_factory("openai", "text-embedding-3-small", client=client)
 
-    faithfulness = Faithfulness(llm=ragas_llm)
-    answer_relevancy = AnswerRelevancy(llm=ragas_llm, embeddings=ragas_embeddings)
-    context_precision = ContextPrecisionWithReference(llm=ragas_llm)
-    context_recall = ContextRecall(llm=ragas_llm)
-    answer_correctness = AnswerCorrectness(llm=ragas_llm, embeddings=ragas_embeddings)
+    # Initialize metrics categorized by type
+    retrieval_metrics = {
+        'context_precision': ContextPrecisionWithReference(llm=ragas_llm),
+        'context_recall': ContextRecall(llm=ragas_llm),
+    }
+    
+    generation_metrics = {
+        'faithfulness': Faithfulness(llm=ragas_llm),
+        'answer_relevancy': AnswerRelevancy(llm=ragas_llm, embeddings=ragas_embeddings),
+        'answer_correctness': AnswerCorrectness(llm=ragas_llm, embeddings=ragas_embeddings),
+    }
 
+    # Process each test case
     results = []
     for row in load_rows():
         question = row["question"]
         expected_answer = row["expected_answer"]
-
         answer = get_real_answer(question)
         contexts = [c.page_content for c in vector_store.similarity_search(question, k=3)]
 
-        faith_score, faith_reasoning = await score_faithfulness(faithfulness, question, answer, contexts)
-        relevancy_score, relevancy_reasoning = await score_answer_relevancy(answer_relevancy, question, answer)
-        precision_score, precision_reasoning = await score_context_precision(context_precision, question, expected_answer, contexts)
-        recall_score, recall_reasoning = await score_context_recall(context_recall, question, expected_answer, contexts)
-        correctness_score, correctness_reasoning = await score_answer_correctness(answer_correctness, question, answer, expected_answer)
+        # Score metrics by category
+        retrieval_scores = await score_retrieval_metrics(retrieval_metrics, question, expected_answer, contexts)
+        generation_scores = await score_generation_metrics(generation_metrics, question, answer, expected_answer, contexts)
 
-        print(f"Q: {question}")
+        # Display results
+        print(f"\nQ: {question}")
         print(f"Expected: {expected_answer}")
         print(f"A: {answer}")
-        print(f"\nFaithfulness: {faith_score:.2f}")
-        for r in faith_reasoning:
-            print(f"  [{'OK' if r['faithful'] else 'UNFAITHFUL'}] {r['statement']}")
-        print(f"\nAnswer Relevancy: {relevancy_score:.2f}")
-        for r in relevancy_reasoning[:1]:
-            print(f"  reverse-engineered Q: {r['generated_question']} (sim={r['similarity_to_original']:.2f})")
-        print(f"\nContext Precision: {precision_score:.2f}")
-        for r in precision_reasoning:
-            print(f"  [{'RELEVANT' if r['relevant'] else 'NOT RELEVANT'}] {r['context_preview']}")
-        print(f"\nContext Recall: {recall_score:.2f}")
-        for r in recall_reasoning:
-            print(f"  [{'ATTRIBUTED' if r['attributed'] else 'NOT ATTRIBUTED'}] {r['statement']}")
-        print(f"\nAnswer Correctness: {correctness_score:.2f} (factuality={correctness_reasoning['factuality_score']:.2f}, similarity={correctness_reasoning['similarity_score']:.2f})")
-        for s in correctness_reasoning["true_positive"]:
-            print(f"  [MATCH] {s['statement']}")
-        for s in correctness_reasoning["false_positive"]:
-            print(f"  [EXTRA/WRONG] {s['statement']}")
-        for s in correctness_reasoning["false_negative"]:
-            print(f"  [MISSING] {s['statement']}")
+        print_results(retrieval_scores, generation_scores)
         print("\n" + "=" * 80 + "\n")
 
+        # Store results
         results.append({
             "question": question,
             "expected_answer": expected_answer,
             "answer": answer,
             "retrieved_contexts": contexts,
-            "faithfulness": {"score": faith_score, "reasoning": faith_reasoning},
-            "answer_relevancy": {"score": relevancy_score, "reasoning": relevancy_reasoning},
-            "context_precision": {"score": precision_score, "reasoning": precision_reasoning},
-            "context_recall": {"score": recall_score, "reasoning": recall_reasoning},
-            "answer_correctness": {"score": correctness_score, "reasoning": correctness_reasoning},
+            "retrieval_metrics": retrieval_scores,
+            "generation_metrics": generation_scores,
+            # Flatten for backward compatibility
+            **retrieval_scores,
+            **generation_scores,
         })
 
+    # Save outputs
     JSON_OUTPUT_PATH.write_text(json.dumps(results, indent=2))
     print(f"Full results with reasoning written to {JSON_OUTPUT_PATH}")
 
     write_html_report(results)
     print(f"Interactive HTML report written to {HTML_OUTPUT_PATH}")
 
-    print("\n--- Summary ---")
-    print(f"{'Question':<45} {'Faith':>7} {'Relev':>7} {'Prec':>7} {'Recall':>7} {'Correct':>7}")
+    # Summary table
+    print("\n" + "=" * 100)
+    print("SUMMARY TABLE")
+    print("=" * 100)
+    print(f"{'Question':<40} | {'Prec':>6} {'Recall':>6} | {'Faith':>6} {'Relev':>6} {'Correct':>6}")
+    print("-" * 100)
     for r in results:
-        print(f"{r['question'][:43]:<45} {r['faithfulness']['score']:>7.2f} {r['answer_relevancy']['score']:>7.2f} {r['context_precision']['score']:>7.2f} {r['context_recall']['score']:>7.2f} {r['answer_correctness']['score']:>7.2f}")
+        q = r['question'][:38] + ".." if len(r['question']) > 40 else r['question']
+        print(f"{q:<40} | {r['context_precision']['score']:>6.2f} {r['context_recall']['score']:>6.2f} | "
+              f"{r['faithfulness']['score']:>6.2f} {r['answer_relevancy']['score']:>6.2f} {r['answer_correctness']['score']:>6.2f}")
+    print("=" * 100)
 
 
 if __name__ == "__main__":
