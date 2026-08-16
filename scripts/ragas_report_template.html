@@ -142,7 +142,7 @@
   <div class="wrap">
     <p class="eyebrow">Riverside Hospital chatbot &middot; Ragas RAG eval</p>
     <h1>RAG eval scores, with reasoning</h1>
-    <p class="subtitle">Questions from tests/rag_ground_truth.csv, answered by the real /chat endpoint. Each score below is backed by the same claim-by-claim, chunk-by-chunk reasoning Ragas computed internally &mdash; click a question to see it.</p>
+    <p class="subtitle">Questions and expected answers from tests/rag_ground_truth.csv, answered by the real /chat endpoint. Each score below is backed by the same claim-by-claim, chunk-by-chunk reasoning Ragas computed internally &mdash; click a question to see it.</p>
 
     <div class="stat-row" id="statRow"></div>
 
@@ -181,8 +181,16 @@ function badge(name, score) {
   return `<span class="badge ${b}"><span class="icon">${icon(b)}</span>${name} ${score.toFixed(2)} &middot; ${label(b)}</span>`;
 }
 
-const metrics = ["faithfulness", "answer_relevancy", "context_precision"];
-const labels = {faithfulness: "Avg Faithfulness", answer_relevancy: "Avg Answer Relevancy", context_precision: "Avg Context Precision"};
+const metrics = ["faithfulness", "answer_relevancy", "context_precision", "context_recall", "answer_correctness"];
+const labels = {
+  faithfulness: "Avg Faithfulness", answer_relevancy: "Avg Answer Relevancy",
+  context_precision: "Avg Context Precision", context_recall: "Avg Context Recall",
+  answer_correctness: "Avg Answer Correctness",
+};
+const shortLabels = {
+  faithfulness: "Faith", answer_relevancy: "Relev", context_precision: "Prec",
+  context_recall: "Recall", answer_correctness: "Correct",
+};
 const statRow = document.getElementById("statRow");
 statRow.innerHTML = metrics.map(m => {
   const avg = DATA.reduce((s, d) => s + d[m].score, 0) / DATA.length;
@@ -190,13 +198,11 @@ statRow.innerHTML = metrics.map(m => {
 }).join("");
 
 const summaryTable = document.getElementById("summaryTable");
-summaryTable.innerHTML = `<tr><th>Question</th><th>Faithfulness</th><th>Answer Relevancy</th><th>Context Precision</th></tr>` +
+summaryTable.innerHTML = `<tr><th>Question</th>${metrics.map(m => `<th>${labels[m].replace("Avg ", "")}</th>`).join("")}</tr>` +
   DATA.map((d, i) => `
     <tr class="summary-row" data-target="q${i}">
       <td>${escapeHtml(d.question)}</td>
-      <td>${badge("", d.faithfulness.score)}</td>
-      <td>${badge("", d.answer_relevancy.score)}</td>
-      <td>${badge("", d.context_precision.score)}</td>
+      ${metrics.map(m => `<td>${badge("", d[m].score)}</td>`).join("")}
     </tr>
   `).join("");
 
@@ -214,13 +220,12 @@ cardsEl.innerHTML = DATA.map((d, i) => `
     <summary>
       <span class="qtext">${escapeHtml(d.question)}</span>
       <span class="badges">
-        ${badge("Faith", d.faithfulness.score)}
-        ${badge("Relev", d.answer_relevancy.score)}
-        ${badge("Prec", d.context_precision.score)}
+        ${metrics.map(m => badge(shortLabels[m], d[m].score)).join("")}
       </span>
     </summary>
     <div class="body">
       <div class="answer-block"><b>Answer:</b> ${escapeHtml(d.answer)}</div>
+      <div class="answer-block"><b>Expected:</b> ${escapeHtml(d.expected_answer)}</div>
 
       <div class="metric-section">
         <h3>Faithfulness ${badge("", d.faithfulness.score)}</h3>
@@ -251,6 +256,7 @@ cardsEl.innerHTML = DATA.map((d, i) => `
 
       <div class="metric-section">
         <h3>Context Precision ${badge("", d.context_precision.score)}</h3>
+        <p class="why" style="margin:0 0 8px;">Judged against the <b>expected</b> answer &mdash; is each chunk relevant to producing it?</p>
         ${d.context_precision.reasoning.map(r => `
           <div class="reason-row ${r.relevant ? 'ok' : 'bad'}">
             <span class="icon">${r.relevant ? '&check;' : '&times;'}</span>
@@ -259,6 +265,34 @@ cardsEl.innerHTML = DATA.map((d, i) => `
               <div class="why">${escapeHtml(r.reason)}</div>
             </div>
           </div>
+        `).join("")}
+      </div>
+
+      <div class="metric-section">
+        <h3>Context Recall ${badge("", d.context_recall.score)}</h3>
+        <p class="why" style="margin:0 0 8px;">Did retrieval fetch everything needed to support the <b>expected</b> answer?</p>
+        ${d.context_recall.reasoning.map(r => `
+          <div class="reason-row ${r.attributed ? 'ok' : 'bad'}">
+            <span class="icon">${r.attributed ? '&check;' : '&times;'}</span>
+            <div class="content">
+              <div class="claim">${escapeHtml(r.statement)}</div>
+              <div class="why">${escapeHtml(r.reason)}</div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+
+      <div class="metric-section">
+        <h3>Answer Correctness ${badge("", d.answer_correctness.score)}</h3>
+        <p class="why" style="margin:0 0 8px;">Factuality ${d.answer_correctness.reasoning.factuality_score.toFixed(2)} (claim overlap with expected answer) &middot; Semantic similarity ${d.answer_correctness.reasoning.similarity_score.toFixed(2)}</p>
+        ${d.answer_correctness.reasoning.true_positive.map(s => `
+          <div class="reason-row ok"><span class="icon">&check;</span><div class="content"><div class="claim">${escapeHtml(s.statement)}</div><div class="why">Matches the expected answer. ${escapeHtml(s.reason)}</div></div></div>
+        `).join("")}
+        ${d.answer_correctness.reasoning.false_positive.map(s => `
+          <div class="reason-row bad"><span class="icon">&times;</span><div class="content"><div class="claim">${escapeHtml(s.statement)}</div><div class="why">Not in the expected answer (extra or wrong). ${escapeHtml(s.reason)}</div></div></div>
+        `).join("")}
+        ${d.answer_correctness.reasoning.false_negative.map(s => `
+          <div class="reason-row bad"><span class="icon">&times;</span><div class="content"><div class="claim">${escapeHtml(s.statement)}</div><div class="why">Expected but missing from the answer. ${escapeHtml(s.reason)}</div></div></div>
         `).join("")}
       </div>
     </div>

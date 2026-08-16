@@ -1,6 +1,7 @@
 [
   {
     "question": "What are Cardiology's opening hours?",
+    "expected_answer": "Cardiology is open Monday to Saturday, 9:00 AM to 5:00 PM.",
     "answer": "Cardiology's opening hours are Monday to Saturday, from 9:00 AM to 5:00 PM.",
     "retrieved_contexts": [
       "# Departments  \n## Cardiology  \n**Services:** Heart and cardiovascular care\n**Hours:** Monday\u2013Saturday, 9:00 AM\u20135:00 PM\n**Point of Contact:** Dr. Rajesh Kumar, Head of Cardiology\n**Contact:** +91 44 4100 2210 | cardiology@riverside.hospital  \nCommon services and concerns include:  \n* Heart disease\n* Chest pain\n* Heart palpitations\n* Cardiovascular health\n* Blood pressure-related cardiac concerns  \n---",
@@ -18,12 +19,12 @@
         {
           "statement": "Cardiology's opening hours are from 9:00 AM to 5:00 PM.",
           "faithful": true,
-          "reason": "The context specifies that Cardiology's hours are from 9:00 AM to 5:00 PM."
+          "reason": "The context provides the specific hours for Cardiology as 9:00 AM\u20135:00 PM."
         }
       ]
     },
     "answer_relevancy": {
-      "score": 0.9469809565017675,
+      "score": 0.9469803130864003,
       "reasoning": [
         {
           "generated_question": "What are the opening hours of Cardiology?",
@@ -37,7 +38,7 @@
         },
         {
           "generated_question": "What are the opening hours of Cardiology?",
-          "similarity_to_original": 0.9469809565017675,
+          "similarity_to_original": 0.9469790262556661,
           "noncommittal": false
         }
       ]
@@ -48,23 +49,53 @@
         {
           "context_preview": "# Departments  \n## Cardiology  \n**Services:** Heart and cardiovascular care\n**Hours:** Monday\u2013Saturday, 9:00 AM\u20135:00 PM\n...",
           "relevant": true,
-          "reason": "The provided context clearly states the opening hours for Cardiology, which directly supports the answer given."
+          "reason": "The provided context clearly states the opening hours for the Cardiology department, which directly supports the answer given."
         },
         {
           "context_preview": "### General Hours  \n| Service                | Hours                            |\n| ---------------------- | -----------...",
           "relevant": false,
-          "reason": "The provided context does not include specific information about Cardiology's opening hours, which are stated in the answer. The context only mentions general hours for other departments and services."
+          "reason": "The provided context does not include specific information about Cardiology's opening hours, which are stated in the answer. Therefore, the context was not useful in arriving at the given answer."
         },
         {
           "context_preview": "## Radiology  \n**Services:** Diagnostic imaging\n**Hours:** Monday\u2013Saturday, 8:00 AM\u20136:00 PM  \nAvailable imaging services...",
           "relevant": false,
-          "reason": "The provided context discusses the hours for Radiology services but does not include any information about Cardiology's opening hours, which makes the context unhelpful in arriving at the given answer."
+          "reason": "The provided context discusses the hours for Radiology services but does not include any information about Cardiology's opening hours, making it unhelpful in arriving at the given answer."
         }
       ]
+    },
+    "context_recall": {
+      "score": 1.0,
+      "reasoning": [
+        {
+          "statement": "Cardiology is open Monday to Saturday, 9:00 AM to 5:00 PM.",
+          "attributed": true,
+          "reason": "The context explicitly states the hours for Cardiology as Monday\u2013Saturday, 9:00 AM\u20135:00 PM."
+        }
+      ]
+    },
+    "answer_correctness": {
+      "score": 0.9872959683621223,
+      "reasoning": {
+        "factuality_score": 1.0,
+        "similarity_score": 0.949183873448489,
+        "true_positive": [
+          {
+            "statement": "Cardiology's opening hours are from 9:00 AM to 5:00 PM.",
+            "reason": "This statement is directly supported by the ground truth which specifies the opening hours of Cardiology."
+          },
+          {
+            "statement": "Cardiology's opening hours are Monday to Saturday.",
+            "reason": "This statement is supported by the ground truth which states that Cardiology is open Monday to Saturday."
+          }
+        ],
+        "false_positive": [],
+        "false_negative": []
+      }
     }
   },
   {
     "question": "What is the pharmacy's contact number?",
+    "expected_answer": "The pharmacy's contact number is +91 44 4100 2295.",
     "answer": "The pharmacy's contact number is +91 44 4100 2295.",
     "retrieved_contexts": [
       "## Pharmacy  \n**Services:** Hospital pharmacy and prescription dispensing\n**Hours:** 24 hours, 7 days a week\n**Location:** Ground floor, near main reception\n**Point of Contact:** Mr. Karthik Rao, Chief Pharmacist\n**Contact:** +91 44 4100 2295 | pharmacy@riverside.hospital  \nPharmacy services include:  \n* Prescription medicine dispensing\n* Medicine availability inquiries\n* Prescription-related pharmacy services\n* Hospital pharmacy support  \n---",
@@ -82,21 +113,21 @@
       ]
     },
     "answer_relevancy": {
-      "score": 0.9343749220689729,
+      "score": 0.934408527316945,
       "reasoning": [
         {
           "generated_question": "What is the contact number of the pharmacy?",
-          "similarity_to_original": 0.9343645431836973,
+          "similarity_to_original": 0.934408527316945,
           "noncommittal": false
         },
         {
           "generated_question": "What is the contact number of the pharmacy?",
-          "similarity_to_original": 0.9343645431836973,
+          "similarity_to_original": 0.934408527316945,
           "noncommittal": false
         },
         {
           "generated_question": "What is the contact number of the pharmacy?",
-          "similarity_to_original": 0.9343956798395241,
+          "similarity_to_original": 0.934408527316945,
           "noncommittal": false
         }
       ]
@@ -120,10 +151,36 @@
           "reason": "The provided context includes a phone number for appointment contact, but it does not match the answer given for the pharmacy's contact number, indicating that the context was not useful in arriving at the answer."
         }
       ]
+    },
+    "context_recall": {
+      "score": 1.0,
+      "reasoning": [
+        {
+          "statement": "The pharmacy's contact number is +91 44 4100 2295.",
+          "attributed": true,
+          "reason": "The contact number for the pharmacy is explicitly mentioned in the context."
+        }
+      ]
+    },
+    "answer_correctness": {
+      "score": 1.0,
+      "reasoning": {
+        "factuality_score": 1.0,
+        "similarity_score": 0.9999999999999999,
+        "true_positive": [
+          {
+            "statement": "The pharmacy's contact number is +91 44 4100 2295.",
+            "reason": "This statement is directly supported by the ground truth which specifies the pharmacy's contact number as +91 44 4100 2295."
+          }
+        ],
+        "false_positive": [],
+        "false_negative": []
+      }
     }
   },
   {
     "question": "How late can I arrive before I need to reschedule my appointment?",
+    "expected_answer": "Patients arriving more than 20 minutes late may need to reschedule their appointment.",
     "answer": "Patients arriving more than **20 minutes late** may need to reschedule their appointment.",
     "retrieved_contexts": [
       "### Late Arrival  \nPatients arriving more than **20 minutes late** may need to reschedule.",
@@ -141,21 +198,21 @@
       ]
     },
     "answer_relevancy": {
-      "score": 0.613515088464024,
+      "score": 0.6135433448957928,
       "reasoning": [
         {
           "generated_question": "What happens if patients arrive more than 20 minutes late?",
-          "similarity_to_original": 0.613515088464024,
+          "similarity_to_original": 0.6135433448957928,
           "noncommittal": false
         },
         {
           "generated_question": "What happens if patients arrive more than 20 minutes late?",
-          "similarity_to_original": 0.613515088464024,
+          "similarity_to_original": 0.6135433448957928,
           "noncommittal": false
         },
         {
           "generated_question": "What happens if patients arrive more than 20 minutes late?",
-          "similarity_to_original": 0.613515088464024,
+          "similarity_to_original": 0.6135433448957928,
           "noncommittal": false
         }
       ]
@@ -176,13 +233,39 @@
         {
           "context_preview": "# Appointments  \nOutpatient consultations require an appointment.",
           "relevant": false,
-          "reason": "The context provided does not contain any information regarding the timing of arrival or the need to reschedule an appointment. Therefore, it was not useful in arriving at the given answer."
+          "reason": "The provided context does not contain any specific information regarding the timing of arrival for appointments or the need to reschedule. Therefore, it was not useful in arriving at the given answer."
         }
       ]
+    },
+    "context_recall": {
+      "score": 1.0,
+      "reasoning": [
+        {
+          "statement": "Patients arriving more than 20 minutes late may need to reschedule their appointment.",
+          "attributed": true,
+          "reason": "The statement is a direct paraphrase of the information provided in the context regarding late arrivals and the need to reschedule."
+        }
+      ]
+    },
+    "answer_correctness": {
+      "score": 0.9942215394991271,
+      "reasoning": {
+        "factuality_score": 1.0,
+        "similarity_score": 0.9768861579965082,
+        "true_positive": [
+          {
+            "statement": "Patients arriving more than 20 minutes late may need to reschedule an appointment.",
+            "reason": "This statement is directly supported by the ground truth which specifies the same condition regarding appointment rescheduling."
+          }
+        ],
+        "false_positive": [],
+        "false_negative": []
+      }
     }
   },
   {
     "question": "What are the cafeteria hours?",
+    "expected_answer": "The cafeteria is open Monday to Sunday, 7:00 AM to 8:00 PM.",
     "answer": "The cafeteria hours are Monday\u2013Sunday, 7:00 AM\u20138:00 PM.",
     "retrieved_contexts": [
       "# Cafeteria  \n**Location:** Ground floor, near the main lobby\n**Hours:** Monday\u2013Sunday, 7:00 AM\u20138:00 PM  \n---",
@@ -205,21 +288,21 @@
       ]
     },
     "answer_relevancy": {
-      "score": 0.9999996206355058,
+      "score": 0.9999996031812654,
       "reasoning": [
         {
           "generated_question": "What are the cafeteria hours?",
-          "similarity_to_original": 0.9999996206355058,
+          "similarity_to_original": 0.9999996031812655,
           "noncommittal": false
         },
         {
           "generated_question": "What are the cafeteria hours?",
-          "similarity_to_original": 0.9999996206355058,
+          "similarity_to_original": 0.9999996031812655,
           "noncommittal": false
         },
         {
           "generated_question": "What are the cafeteria hours?",
-          "similarity_to_original": 0.9999996206355058,
+          "similarity_to_original": 0.9999996031812655,
           "noncommittal": false
         }
       ]
@@ -230,36 +313,66 @@
         {
           "context_preview": "# Cafeteria  \n**Location:** Ground floor, near the main lobby\n**Hours:** Monday\u2013Sunday, 7:00 AM\u20138:00 PM  \n---",
           "relevant": true,
-          "reason": "The provided context clearly states the cafeteria hours, which directly corresponds to the answer given. Therefore, the context was useful in arriving at the answer."
+          "reason": "The provided context clearly states the cafeteria hours, which directly supports the answer given. The answer accurately reflects the information found in the context."
         },
         {
           "context_preview": "### General Hours  \n| Service                | Hours                            |\n| ---------------------- | -----------...",
           "relevant": false,
-          "reason": "The provided context does not include any information about the cafeteria hours, which makes it impossible to verify the accuracy of the answer regarding the cafeteria hours."
+          "reason": "The provided context does not include any information about the cafeteria hours, which makes it difficult to verify the accuracy of the answer regarding the cafeteria's operating times."
         },
         {
           "context_preview": "# Visiting Hours  \n**General inpatient visiting hours:**\nMonday\u2013Sunday, 4:00 PM\u20137:00 PM  \nWard-specific visitor restrict...",
           "relevant": false,
-          "reason": "The provided context discusses general inpatient visiting hours but does not include any information about cafeteria hours, which makes it not useful for arriving at the given answer."
+          "reason": "The provided context discusses general inpatient visiting hours but does not provide any information about the cafeteria hours, which are unrelated to the visiting hours mentioned."
         }
       ]
+    },
+    "context_recall": {
+      "score": 1.0,
+      "reasoning": [
+        {
+          "statement": "The cafeteria is open Monday to Sunday, 7:00 AM to 8:00 PM.",
+          "attributed": true,
+          "reason": "The statement directly matches the hours provided in the context for the cafeteria."
+        }
+      ]
+    },
+    "answer_correctness": {
+      "score": 0.9812591939082038,
+      "reasoning": {
+        "factuality_score": 1.0,
+        "similarity_score": 0.9250367756328151,
+        "true_positive": [
+          {
+            "statement": "The cafeteria operates from 7:00 AM to 8:00 PM.",
+            "reason": "This statement is directly supported by the ground truth which specifies the cafeteria hours as being from 7:00 AM to 8:00 PM."
+          },
+          {
+            "statement": "The cafeteria hours are Monday to Sunday.",
+            "reason": "This statement is supported by the ground truth which states that the cafeteria is open Monday to Sunday."
+          }
+        ],
+        "false_positive": [],
+        "false_negative": []
+      }
     }
   },
   {
     "question": "I have severe back pain after lifting weights",
-    "answer": "I recommend visiting the Orthopedics department, which specializes in bones, joints, muscles, and injuries, including back pain. The Orthopedics department is open Monday to Saturday from 9:00 AM to 5:00 PM. Please note that walk-in outpatient consultations are not guaranteed. If your condition is urgent, you may also consider visiting the Emergency Department, which is open 24 hours a day, 7 days a week. For emergencies, please call +91 44 4100 2299.",
+    "expected_answer": "Patients with back pain should visit the Orthopedics department, which handles bones, joints, muscles, and injuries including back pain. Orthopedics is open Monday to Saturday, 9:00 AM to 5:00 PM.",
+    "answer": "I recommend visiting the Orthopedics department, which specializes in bones, joints, muscles, and injuries, including back pain. The Orthopedics department is open Monday to Saturday from 9:00 AM to 5:00 PM. Please note that walk-in outpatient consultations are not guaranteed. If your situation is urgent, please call our Emergency Department at +91 44 4100 2299 for immediate assistance.",
     "retrieved_contexts": [
       "## Orthopedics  \n**Services:** Bones, joints, muscles, and injuries\n**Hours:** Monday\u2013Saturday, 9:00 AM\u20135:00 PM  \nCommon services and concerns include:  \n* Back pain\n* Joint pain\n* Fractures\n* Sports injuries\n* Bone and muscle injuries  \n---",
       "# Emergency Department  \n**Hours:** 24 hours, 7 days a week\n**Emergency Phone:** +91 44 4100 2299  \nEmergency services do not require a prior appointment.  \nThe Emergency Department handles urgent situations including:  \n* Severe chest pain\n* Difficulty breathing\n* Severe bleeding\n* Loss of consciousness\n* Major injuries\n* Suspected stroke symptoms  \n---",
       "### Walk-ins  \nWalk-in outpatient consultations are not guaranteed.  \n---"
     ],
     "faithfulness": {
-      "score": 0.8571428571428571,
+      "score": 0.8,
       "reasoning": [
         {
           "statement": "Visiting the Orthopedics department is recommended.",
           "faithful": false,
-          "reason": "The context does not explicitly recommend visiting the Orthopedics department; it only describes the services offered."
+          "reason": "The context does not provide a recommendation for visiting the Orthopedics department; it only lists services and hours."
         },
         {
           "statement": "The Orthopedics department specializes in bones, joints, muscles, and injuries, including back pain.",
@@ -269,46 +382,36 @@
         {
           "statement": "The Orthopedics department is open Monday to Saturday from 9:00 AM to 5:00 PM.",
           "faithful": true,
-          "reason": "The context clearly states the hours of operation for the Orthopedics department."
+          "reason": "The context clearly mentions the hours of operation for the Orthopedics department as Monday to Saturday, 9:00 AM to 5:00 PM."
         },
         {
           "statement": "Walk-in outpatient consultations are not guaranteed.",
           "faithful": true,
-          "reason": "The context explicitly mentions that walk-in outpatient consultations are not guaranteed."
+          "reason": "The context states that walk-in outpatient consultations are not guaranteed."
         },
         {
-          "statement": "If the condition is urgent, visiting the Emergency Department is also a consideration.",
+          "statement": "If the situation is urgent, it is advised to call the Emergency Department at +91 44 4100 2299 for immediate assistance.",
           "faithful": true,
-          "reason": "The context indicates that the Emergency Department handles urgent situations, making this statement a reasonable inference."
-        },
-        {
-          "statement": "The Emergency Department is open 24 hours a day, 7 days a week.",
-          "faithful": true,
-          "reason": "The context clearly states the hours of operation for the Emergency Department."
-        },
-        {
-          "statement": "For emergencies, the contact number is +91 44 4100 2299.",
-          "faithful": true,
-          "reason": "The context explicitly provides the contact number for the Emergency Department."
+          "reason": "The context provides the emergency phone number and states that emergency services do not require a prior appointment, implying that calling is advised in urgent situations."
         }
       ]
     },
     "answer_relevancy": {
-      "score": 0.2266903663178542,
+      "score": 0.17393724474747985,
       "reasoning": [
         {
           "generated_question": "What are the hours of operation for the Orthopedics department?",
-          "similarity_to_original": 0.1739157507619208,
+          "similarity_to_original": 0.17394320932707633,
           "noncommittal": false
         },
         {
           "generated_question": "What are the hours of operation for the Orthopedics department?",
-          "similarity_to_original": 0.1739157507619208,
+          "similarity_to_original": 0.17394320932707633,
           "noncommittal": false
         },
         {
-          "generated_question": "What department should I visit for issues related to bones and joints?",
-          "similarity_to_original": 0.33223959742972087,
+          "generated_question": "What are the hours of operation for the Orthopedics department?",
+          "similarity_to_original": 0.17392531558828683,
           "noncommittal": false
         }
       ]
@@ -319,23 +422,71 @@
         {
           "context_preview": "## Orthopedics  \n**Services:** Bones, joints, muscles, and injuries\n**Hours:** Monday\u2013Saturday, 9:00 AM\u20135:00 PM  \nCommon...",
           "relevant": true,
-          "reason": "The provided context was useful in arriving at the given answer. It outlines the services offered by the Orthopedics department, which includes back pain, and provides relevant information about the department's hours and recommendations for urgent care."
+          "reason": "The provided context is useful as it outlines the services offered by the Orthopedics department, specifically mentioning back pain as a common concern. This directly supports the answer given."
         },
         {
           "context_preview": "# Emergency Department  \n**Hours:** 24 hours, 7 days a week\n**Emergency Phone:** +91 44 4100 2299  \nEmergency services d...",
           "relevant": false,
-          "reason": "The context provides information about the Emergency Department's hours and the types of urgent situations it handles, which is relevant for someone experiencing severe back pain. However, it does not specifically mention the Orthopedics department or its hours, which is crucial for the answer. Therefore, while the context is somewhat related, it does not directly support the recommendation made in the answer."
+          "reason": "The context provided information about the Emergency Department and its services, but it does not mention the Orthopedics department or provide relevant guidance for patients with back pain. Therefore, the context was not useful in arriving at the given answer."
         },
         {
           "context_preview": "### Walk-ins  \nWalk-in outpatient consultations are not guaranteed.  \n---",
           "relevant": false,
-          "reason": "The provided context does not contain relevant information regarding back pain or the appropriate medical departments to visit. It only mentions walk-in outpatient consultations without addressing the specific issue of severe back pain after lifting weights."
+          "reason": "The provided context does not contain relevant information regarding back pain or the appropriate department to visit for such issues. It only mentions walk-in outpatient consultations without addressing the specific question about back pain."
         }
       ]
+    },
+    "context_recall": {
+      "score": 1.0,
+      "reasoning": [
+        {
+          "statement": "Patients with back pain should visit the Orthopedics department, which handles bones, joints, muscles, and injuries including back pain.",
+          "attributed": true,
+          "reason": "The context explicitly mentions that back pain is a common concern addressed by the Orthopedics department."
+        },
+        {
+          "statement": "Orthopedics is open Monday to Saturday, 9:00 AM to 5:00 PM.",
+          "attributed": true,
+          "reason": "The context provides the hours of operation for the Orthopedics department, confirming the statement."
+        }
+      ]
+    },
+    "answer_correctness": {
+      "score": 0.7788154841499869,
+      "reasoning": {
+        "factuality_score": 0.7499999999999999,
+        "similarity_score": 0.865261936599948,
+        "true_positive": [
+          {
+            "statement": "Visiting the Orthopedics department is recommended.",
+            "reason": "This statement is supported by the ground truth which advises patients with back pain to visit the Orthopedics department."
+          },
+          {
+            "statement": "The Orthopedics department specializes in bones, joints, muscles, and injuries, including back pain.",
+            "reason": "This statement is directly supported by the ground truth that states the Orthopedics department handles injuries including back pain."
+          },
+          {
+            "statement": "The Orthopedics department is open Monday to Saturday from 9:00 AM to 5:00 PM.",
+            "reason": "This statement is supported by the ground truth which mentions the operating hours of the Orthopedics department."
+          }
+        ],
+        "false_positive": [
+          {
+            "statement": "Walk-in outpatient consultations are not guaranteed.",
+            "reason": "This statement is not supported by the ground truth and introduces information that is not mentioned."
+          },
+          {
+            "statement": "If a situation is urgent, calling the Emergency Department at +91 44 4100 2299 for immediate assistance is advised.",
+            "reason": "This statement is not found in the ground truth and provides information unrelated to the Orthopedics department's handling of back pain."
+          }
+        ],
+        "false_negative": []
+      }
     }
   },
   {
     "question": "My child has a red, itchy rash and a mild fever",
+    "expected_answer": "A child with a rash and fever should visit the Pediatrics department, which provides medical care for infants, children, and adolescents, including fever in children. Pediatrics is open Monday to Saturday, 8:00 AM to 2:00 PM, contact +91 44 4100 2220.",
     "answer": "For your child's red, itchy rash and mild fever, I recommend visiting our Pediatrics department, which specializes in medical care for infants, children, and adolescents. The Pediatrics department is open Monday to Saturday from 8:00 AM to 2:00 PM. You can contact them at +91 44 4100 2220 or via email at pediatrics@riverside.hospital for further assistance.",
     "retrieved_contexts": [
       "## General Medicine  \n**Services:** General adult medical care\n**Hours:** Monday\u2013Saturday, 8:00 AM\u20136:00 PM  \nCommon services and concerns include:  \n* Fever\n* Cough and cold\n* General weakness\n* Routine adult health concerns\n* General medical consultations  \n---",
@@ -348,12 +499,12 @@
         {
           "statement": "The child has a red, itchy rash and a mild fever.",
           "faithful": false,
-          "reason": "The context does not provide any specific information about the child's symptoms; it only lists common services and concerns."
+          "reason": "The context mentions common services and concerns in Pediatrics include fever in children, but does not specify the child's condition."
         },
         {
-          "statement": "Visiting the Pediatrics department is recommended for the child's condition.",
+          "statement": "It is recommended to visit the Pediatrics department for the child's condition.",
           "faithful": false,
-          "reason": "While the context mentions common concerns in Pediatrics, it does not explicitly recommend visiting the department for the child's unspecified condition."
+          "reason": "The context does not provide a recommendation for visiting the Pediatrics department based on the child's condition."
         },
         {
           "statement": "The Pediatrics department specializes in medical care for infants, children, and adolescents.",
@@ -363,17 +514,17 @@
         {
           "statement": "The Pediatrics department is open Monday to Saturday from 8:00 AM to 2:00 PM.",
           "faithful": true,
-          "reason": "The context clearly states the hours of operation for the Pediatrics department."
+          "reason": "The context provides the hours of operation for the Pediatrics department as Monday to Saturday, 8:00 AM to 2:00 PM."
         },
         {
           "statement": "The Pediatrics department can be contacted at +91 44 4100 2220.",
           "faithful": true,
-          "reason": "The context provides the contact number for the Pediatrics department."
+          "reason": "The context includes the contact number for the Pediatrics department."
         },
         {
-          "statement": "Further assistance can be obtained via email at pediatrics@riverside.hospital.",
+          "statement": "The Pediatrics department can also be contacted via email at pediatrics@riverside.hospital for further assistance.",
           "faithful": true,
-          "reason": "The context includes the email address for contacting the Pediatrics department."
+          "reason": "The context provides the email address for contacting the Pediatrics department."
         }
       ]
     },
@@ -403,19 +554,70 @@
         {
           "context_preview": "## General Medicine  \n**Services:** General adult medical care\n**Hours:** Monday\u2013Saturday, 8:00 AM\u20136:00 PM  \nCommon serv...",
           "relevant": false,
-          "reason": "The context provided does not specifically address pediatric care or the symptoms of a child, such as a red, itchy rash and mild fever. It focuses on general adult medical care and services, making it less relevant to the question about a child's health issue."
+          "reason": "The context provided does not specifically address pediatric care or the symptoms of a child with a rash and fever. It focuses on general adult medical care and common adult health concerns, making it less useful for the specific question about a child's condition."
         },
         {
           "context_preview": "## Pediatrics  \n**Services:** Medical care for infants, children, and adolescents\n**Hours:** Monday\u2013Saturday, 8:00 AM\u20132:...",
           "relevant": true,
-          "reason": "The provided context was useful in arriving at the given answer. It includes relevant information about the Pediatrics department, which specializes in medical care for children and addresses common concerns such as fever in children, making it appropriate for the situation described."
+          "reason": "The provided context is useful as it outlines the services offered by the Pediatrics department, including care for childhood illnesses and fever in children, which directly relates to the symptoms described in the question."
         },
         {
           "context_preview": "## Dermatology  \n**Services:** Skin, hair, and nail care\n**Hours:** Monday\u2013Friday, 10:00 AM\u20134:00 PM  \nCommon services an...",
           "relevant": false,
-          "reason": "The context provided information about dermatology services but did not directly address the specific symptoms of a red, itchy rash and mild fever. The answer suggests visiting the Pediatrics department, which is not mentioned in the context, indicating that the context was not useful in arriving at the answer."
+          "reason": "The provided context discusses dermatology services but does not directly address the specific situation of a child with a rash and fever. The answer suggests visiting the Pediatrics department, which is not mentioned in the context, making the context not useful for arriving at the answer."
         }
       ]
+    },
+    "context_recall": {
+      "score": 1.0,
+      "reasoning": [
+        {
+          "statement": "A child with a rash and fever should visit the Pediatrics department, which provides medical care for infants, children, and adolescents, including fever in children.",
+          "attributed": true,
+          "reason": "The context mentions that the Pediatrics department provides care for children and specifically lists fever in children as a common concern."
+        },
+        {
+          "statement": "Pediatrics is open Monday to Saturday, 8:00 AM to 2:00 PM.",
+          "attributed": true,
+          "reason": "The context provides the hours of operation for the Pediatrics department."
+        },
+        {
+          "statement": "Contact +91 44 4100 2220.",
+          "attributed": true,
+          "reason": "The context includes the contact information for the Pediatrics department."
+        }
+      ]
+    },
+    "answer_correctness": {
+      "score": 0.9657582908720844,
+      "reasoning": {
+        "factuality_score": 1.0,
+        "similarity_score": 0.8630331634883378,
+        "true_positive": [
+          {
+            "statement": "The child has a red, itchy rash and a mild fever.",
+            "reason": "This statement is a direct restatement of the symptoms mentioned in the question, which aligns with the ground truth."
+          },
+          {
+            "statement": "Visiting the Pediatrics department is recommended for the child's condition.",
+            "reason": "This statement is supported by the ground truth which advises that a child with a rash and fever should visit the Pediatrics department."
+          },
+          {
+            "statement": "The Pediatrics department provides medical care for infants, children, and adolescents.",
+            "reason": "This statement is directly supported by the ground truth which states the same about the Pediatrics department."
+          },
+          {
+            "statement": "The Pediatrics department is open Monday to Saturday from 8:00 AM to 2:00 PM.",
+            "reason": "This statement is directly supported by the ground truth which provides the same operational hours for the Pediatrics department."
+          },
+          {
+            "statement": "The contact number for the Pediatrics department is +91 44 4100 2220.",
+            "reason": "This statement is directly supported by the ground truth which specifies the contact number for the Pediatrics department."
+          }
+        ],
+        "false_positive": [],
+        "false_negative": []
+      }
     }
   }
 ]

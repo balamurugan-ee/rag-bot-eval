@@ -1,27 +1,28 @@
 """
 Ragas eval for the RAG receptionist, testing the REAL /chat endpoint.
 
-Three reference-free metrics, all scoring the system's own answer/retrieval
-against each other -- no gold/expected answer needed:
-  - Faithfulness: does the answer only contain claims traceable to context?
-  - Answer Relevancy: does the answer actually address the question asked?
-  - Context Precision: of the retrieved chunks, how many were relevant?
-
-Questions come from tests/rag_ground_truth.csv -- Excel-editable, same
-pattern as tests/classification_ground_truth.csv.
+Five metrics -- the two reference-based ones need the expected_answer
+column in tests/rag_ground_truth.csv:
+  - Faithfulness (reference-free): does the answer only contain claims
+    traceable to the retrieved context?
+  - Answer Relevancy (reference-free): does the answer actually address
+    the question asked?
+  - Context Precision (reference-based): of the retrieved chunks, how many
+    were relevant to producing the expected answer?
+  - Context Recall (reference-based): did retrieval fetch everything needed
+    to support the expected answer?
+  - Answer Correctness (reference-based): does the answer match the
+    expected answer, factually (TP/FP/FN claim overlap) and semantically?
 
 The answer being graded always comes from a real HTTP call to /chat -- not
 from calling ReceptionistBot directly -- so this tests what's actually
-deployed. retrieved_contexts for Faithfulness and Context Precision come
-from an independent, read-only vector store call, since /chat only returns
-{response} by design. Answer Relevancy needs no context at all.
+deployed. retrieved_contexts come from an independent, read-only vector
+store call, since /chat only returns {response} by design.
 
 Each metric's .score()/.ascore() shortcut only returns the final number and
 throws away its own intermediate reasoning -- so this script calls the same
-internal pieces ascore() calls (statement generation + NLI verdicts for
-faithfulness, per-chunk verdicts for context precision, reverse-engineered
-questions + similarity for answer relevancy) directly, to capture *why* each
-score came out the way it did, not just the number.
+internal pieces ascore() calls directly, to capture *why* each score came
+out the way it did, not just the number.
 
 Output: printed per-question reasoning, a full JSON dump, and an interactive
 HTML report (tests/ragas_report.html) -- regenerated on every run from
@@ -37,9 +38,16 @@ import requests
 from openai import AsyncOpenAI
 from ragas.llms import llm_factory
 from ragas.embeddings import embedding_factory
-from ragas.metrics.collections import Faithfulness, AnswerRelevancy, ContextPrecisionWithoutReference
+from ragas.metrics.collections import (
+    Faithfulness,
+    AnswerRelevancy,
+    ContextPrecisionWithReference,
+    ContextRecall,
+    AnswerCorrectness,
+)
 from ragas.metrics.collections.context_precision.metric import ContextPrecisionInput, ContextPrecisionOutput
 from ragas.metrics.collections.answer_relevancy.metric import AnswerRelevanceInput, AnswerRelevanceOutput
+from ragas.metrics.collections.context_recall.metric import ContextRecallInput, ContextRecallOutput
 
 from src.vectordb.manager import VectorStoreManager
 from src.config import settings
@@ -57,9 +65,12 @@ def write_html_report(results):
     HTML_OUTPUT_PATH.write_text(html, encoding="utf-8")
 
 
-def load_questions():
+def load_rows():
     with open(CSV_PATH, newline="", encoding="utf-8") as f:
-        return [row["question"].strip() for row in csv.DictReader(f)]
+        return [
+            {"question": row["question"].strip(), "expected_answer": row["expected_answer"].strip()}
+            for row in csv.DictReader(f)
+        ]
 
 
 def get_real_answer(question: str) -> str:
@@ -81,24 +92,6 @@ async def score_faithfulness(metric: Faithfulness, question: str, answer: str, c
         {"statement": s.statement, "faithful": bool(s.verdict), "reason": s.reason}
         for s in verdicts.statements
     ]
-    return float(score), reasoning
-
-
-async def score_context_precision(metric: ContextPrecisionWithoutReference, question: str, answer: str, contexts: list[str]):
-    verdicts = []
-    reasoning = []
-    for context in contexts:
-        input_data = ContextPrecisionInput(question=question, context=context, answer=answer)
-        prompt_string = metric.prompt.to_string(input_data)
-        result = await metric.llm.agenerate(prompt_string, ContextPrecisionOutput)
-        verdicts.append(result.verdict)
-        reasoning.append({
-            "context_preview": context[:120] + ("..." if len(context) > 120 else ""),
-            "relevant": bool(result.verdict),
-            "reason": result.reason,
-        })
-
-    score = metric._calculate_average_precision(verdicts)
     return float(score), reasoning
 
 
@@ -131,6 +124,72 @@ async def score_answer_relevancy(metric: AnswerRelevancy, question: str, answer:
     return score, reasoning
 
 
+async def score_context_precision(metric: ContextPrecisionWithReference, question: str, expected_answer: str, contexts: list[str]):
+    """Judges each retrieved chunk against the EXPECTED answer, not the system's own answer."""
+    verdicts = []
+    reasoning = []
+    for context in contexts:
+        input_data = ContextPrecisionInput(question=question, context=context, answer=expected_answer)
+        prompt_string = metric.prompt.to_string(input_data)
+        result = await metric.llm.agenerate(prompt_string, ContextPrecisionOutput)
+        verdicts.append(result.verdict)
+        reasoning.append({
+            "context_preview": context[:120] + ("..." if len(context) > 120 else ""),
+            "relevant": bool(result.verdict),
+            "reason": result.reason,
+        })
+
+    score = metric._calculate_average_precision(verdicts)
+    return float(score), reasoning
+
+
+async def score_context_recall(metric: ContextRecall, question: str, expected_answer: str, contexts: list[str]):
+    """Checks whether the retrieved context supports every claim in the EXPECTED answer."""
+    context_str = "\n".join(contexts)
+    input_data = ContextRecallInput(question=question, context=context_str, answer=expected_answer)
+    prompt_string = metric.prompt.to_string(input_data)
+    result = await metric.llm.agenerate(prompt_string, ContextRecallOutput)
+
+    if not result.classifications:
+        return float("nan"), []
+
+    attributions = [c.attributed for c in result.classifications]
+    score = sum(attributions) / len(attributions)
+
+    reasoning = [
+        {"statement": c.statement, "attributed": bool(c.attributed), "reason": c.reason}
+        for c in result.classifications
+    ]
+    return float(score), reasoning
+
+
+async def score_answer_correctness(metric: AnswerCorrectness, question: str, answer: str, expected_answer: str):
+    response_statements = await metric._generate_statements(question, answer)
+    reference_statements = await metric._generate_statements(question, expected_answer)
+
+    if response_statements and reference_statements:
+        classification = await metric._classify_statements(question, response_statements, reference_statements)
+        factuality_score = metric._compute_f1_score(classification)
+        claim_reasoning = {
+            "true_positive": [{"statement": s.statement, "reason": s.reason} for s in classification.TP],
+            "false_positive": [{"statement": s.statement, "reason": s.reason} for s in classification.FP],
+            "false_negative": [{"statement": s.statement, "reason": s.reason} for s in classification.FN],
+        }
+    else:
+        factuality_score = 1.0
+        claim_reasoning = {"true_positive": [], "false_positive": [], "false_negative": []}
+
+    similarity_score = await metric._calculate_similarity(answer, expected_answer)
+    final_score = float(np.average([factuality_score, similarity_score], weights=metric.weights))
+
+    reasoning = {
+        "factuality_score": float(factuality_score),
+        "similarity_score": float(similarity_score),
+        **claim_reasoning,
+    }
+    return final_score, reasoning
+
+
 async def main():
     vector_store = VectorStoreManager()
     vector_store.initialize()
@@ -141,40 +200,58 @@ async def main():
 
     faithfulness = Faithfulness(llm=ragas_llm)
     answer_relevancy = AnswerRelevancy(llm=ragas_llm, embeddings=ragas_embeddings)
-    context_precision = ContextPrecisionWithoutReference(llm=ragas_llm)
+    context_precision = ContextPrecisionWithReference(llm=ragas_llm)
+    context_recall = ContextRecall(llm=ragas_llm)
+    answer_correctness = AnswerCorrectness(llm=ragas_llm, embeddings=ragas_embeddings)
 
     results = []
-    for question in load_questions():
+    for row in load_rows():
+        question = row["question"]
+        expected_answer = row["expected_answer"]
+
         answer = get_real_answer(question)
         contexts = [c.page_content for c in vector_store.similarity_search(question, k=3)]
 
         faith_score, faith_reasoning = await score_faithfulness(faithfulness, question, answer, contexts)
         relevancy_score, relevancy_reasoning = await score_answer_relevancy(answer_relevancy, question, answer)
-        precision_score, precision_reasoning = await score_context_precision(context_precision, question, answer, contexts)
+        precision_score, precision_reasoning = await score_context_precision(context_precision, question, expected_answer, contexts)
+        recall_score, recall_reasoning = await score_context_recall(context_recall, question, expected_answer, contexts)
+        correctness_score, correctness_reasoning = await score_answer_correctness(answer_correctness, question, answer, expected_answer)
 
         print(f"Q: {question}")
+        print(f"Expected: {expected_answer}")
         print(f"A: {answer}")
         print(f"\nFaithfulness: {faith_score:.2f}")
         for r in faith_reasoning:
             print(f"  [{'OK' if r['faithful'] else 'UNFAITHFUL'}] {r['statement']}")
-            print(f"      why: {r['reason']}")
         print(f"\nAnswer Relevancy: {relevancy_score:.2f}")
-        for r in relevancy_reasoning:
-            flag = " (NONCOMMITTAL)" if r["noncommittal"] else ""
-            print(f"  sim={r['similarity_to_original']:.2f}{flag}  reverse-engineered Q: {r['generated_question']}")
+        for r in relevancy_reasoning[:1]:
+            print(f"  reverse-engineered Q: {r['generated_question']} (sim={r['similarity_to_original']:.2f})")
         print(f"\nContext Precision: {precision_score:.2f}")
         for r in precision_reasoning:
             print(f"  [{'RELEVANT' if r['relevant'] else 'NOT RELEVANT'}] {r['context_preview']}")
-            print(f"      why: {r['reason']}")
+        print(f"\nContext Recall: {recall_score:.2f}")
+        for r in recall_reasoning:
+            print(f"  [{'ATTRIBUTED' if r['attributed'] else 'NOT ATTRIBUTED'}] {r['statement']}")
+        print(f"\nAnswer Correctness: {correctness_score:.2f} (factuality={correctness_reasoning['factuality_score']:.2f}, similarity={correctness_reasoning['similarity_score']:.2f})")
+        for s in correctness_reasoning["true_positive"]:
+            print(f"  [MATCH] {s['statement']}")
+        for s in correctness_reasoning["false_positive"]:
+            print(f"  [EXTRA/WRONG] {s['statement']}")
+        for s in correctness_reasoning["false_negative"]:
+            print(f"  [MISSING] {s['statement']}")
         print("\n" + "=" * 80 + "\n")
 
         results.append({
             "question": question,
+            "expected_answer": expected_answer,
             "answer": answer,
             "retrieved_contexts": contexts,
             "faithfulness": {"score": faith_score, "reasoning": faith_reasoning},
             "answer_relevancy": {"score": relevancy_score, "reasoning": relevancy_reasoning},
             "context_precision": {"score": precision_score, "reasoning": precision_reasoning},
+            "context_recall": {"score": recall_score, "reasoning": recall_reasoning},
+            "answer_correctness": {"score": correctness_score, "reasoning": correctness_reasoning},
         })
 
     JSON_OUTPUT_PATH.write_text(json.dumps(results, indent=2))
@@ -184,9 +261,9 @@ async def main():
     print(f"Interactive HTML report written to {HTML_OUTPUT_PATH}")
 
     print("\n--- Summary ---")
-    print(f"{'Question':<55} {'Faith':>7} {'Relev':>7} {'Prec':>7}")
+    print(f"{'Question':<45} {'Faith':>7} {'Relev':>7} {'Prec':>7} {'Recall':>7} {'Correct':>7}")
     for r in results:
-        print(f"{r['question'][:53]:<55} {r['faithfulness']['score']:>7.2f} {r['answer_relevancy']['score']:>7.2f} {r['context_precision']['score']:>7.2f}")
+        print(f"{r['question'][:43]:<45} {r['faithfulness']['score']:>7.2f} {r['answer_relevancy']['score']:>7.2f} {r['context_precision']['score']:>7.2f} {r['context_recall']['score']:>7.2f} {r['answer_correctness']['score']:>7.2f}")
 
 
 if __name__ == "__main__":
