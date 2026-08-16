@@ -1,0 +1,7 @@
+question,description
+"What are Cardiology's opening hours?","direct factual question"
+"What is the pharmacy's contact number?","direct factual question"
+"How late can I arrive before I need to reschedule my appointment?","untagged KB section, relies on fallback search"
+"What are the cafeteria hours?","untagged KB section, relies on fallback search"
+"I have severe back pain after lifting weights","regression check - symptom framing, not a direct factual question"
+"My child has a red, itchy rash and a mild fever","regression check - symptom framing, not a direct factual question"

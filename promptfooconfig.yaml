@@ -14,6 +14,7 @@ providers:
         message: "{{message}}"
       transformResponse: "json"
 
-tests:
-  - tests/01_accuracy.yaml
-  - tests/02_precision_recall.yaml
+tests: []
+  # RAG groundedness suite (tests/03_rag_groundedness.yaml) needs to be rebuilt --
+  # it was removed independently of this cleanup. /chat is now a pure RAG
+  # endpoint (no department field), so a fresh suite can target it cleanly.

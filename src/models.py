@@ -20,7 +20,6 @@ class ChatRequest(BaseModel):
 
 
 class ChatResponse(BaseModel):
-    department: DepartmentType
     response: str
 
 

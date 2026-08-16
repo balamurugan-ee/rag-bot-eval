@@ -19,3 +19,5 @@ requests>=2.31.0
 arize-phoenix==15.0.0
 openinference-instrumentation-langchain
 opentelemetry-instrumentation-fastapi
+
+ragas

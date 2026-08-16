@@ -1,0 +1,267 @@
+<title>Ragas RAG Eval — Scores &amp; Reasoning</title>
+<style>
+  .viz-root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:      #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --border:         rgba(11,11,11,0.10);
+    --seq-1:          #5598e7;
+    --seq-2:          #184f95;
+    --good:           #0ca30c;
+    --warning:        #fab219;
+    --critical:       #d03b3b;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    background: var(--page-plane);
+    color: var(--text-primary);
+    padding: 32px;
+    box-sizing: border-box;
+    min-height: 100vh;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) .viz-root {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page-plane:      #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --border:         rgba(255,255,255,0.10);
+      --seq-1:          #3987e5;
+      --seq-2:          #86b6ef;
+      --good:           #0ca30c;
+      --warning:        #fab219;
+      --critical:       #e66767;
+    }
+  }
+  :root[data-theme="dark"] .viz-root {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page-plane:      #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --gridline:       #2c2c2a;
+    --border:         rgba(255,255,255,0.10);
+    --seq-1:          #3987e5;
+    --seq-2:          #86b6ef;
+    --good:           #0ca30c;
+    --warning:        #fab219;
+    --critical:       #e66767;
+  }
+
+  * { box-sizing: border-box; }
+  .wrap { max-width: 980px; margin: 0 auto; }
+
+  .eyebrow {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--text-muted); margin: 0 0 6px;
+  }
+  h1 { font-size: 22px; margin: 0 0 6px; text-wrap: balance; letter-spacing: -0.01em; }
+  .subtitle { color: var(--text-secondary); font-size: 13px; margin: 0 0 24px; max-width: 65ch; }
+
+  .stat-row { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+  .stat-tile {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px 18px; min-width: 150px; flex: 1;
+  }
+  .stat-tile .label { font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+  .stat-tile .value { font-size: 26px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  .panel {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; margin-bottom: 20px; overflow-x: auto;
+  }
+  .panel h2 { font-size: 14px; margin: 0 0 4px; }
+  .panel .desc { font-size: 12px; color: var(--text-secondary); margin: 0 0 16px; }
+
+  table.summary { border-collapse: collapse; width: 100%; font-size: 13px; }
+  table.summary th {
+    text-align: left; font-weight: 500; color: var(--text-secondary);
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.03em;
+    padding: 6px 10px; border-bottom: 1px solid var(--gridline);
+  }
+  table.summary td { padding: 8px 10px; border-bottom: 1px solid var(--gridline); font-variant-numeric: tabular-nums; }
+  table.summary tr:last-child td { border-bottom: none; }
+  table.summary tr.summary-row { cursor: pointer; }
+  table.summary tr.summary-row:hover { background: var(--page-plane); }
+
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 600; padding: 3px 8px; border-radius: 999px;
+    font-variant-numeric: tabular-nums;
+  }
+  .badge.good { background: color-mix(in srgb, var(--good) 14%, transparent); color: var(--good); }
+  .badge.warning { background: color-mix(in srgb, var(--warning) 20%, transparent); color: color-mix(in srgb, var(--warning) 70%, var(--text-primary)); }
+  .badge.critical { background: color-mix(in srgb, var(--critical) 14%, transparent); color: var(--critical); }
+  .badge .icon { font-size: 11px; }
+
+  .qcard { border: 1px solid var(--gridline); border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+  .qcard summary {
+    padding: 14px 16px; cursor: pointer; list-style: none;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  }
+  .qcard summary::-webkit-details-marker { display: none; }
+  .qcard summary .qtext { font-size: 14px; font-weight: 500; flex: 1; min-width: 220px; }
+  .qcard summary .badges { display: flex; gap: 6px; flex-wrap: wrap; }
+  .qcard[open] summary { border-bottom: 1px solid var(--gridline); }
+  .qcard .body { padding: 16px; }
+
+  .answer-block {
+    background: var(--page-plane); border-radius: 8px; padding: 12px 14px;
+    font-size: 13px; color: var(--text-secondary); margin-bottom: 18px; line-height: 1.5;
+  }
+  .answer-block b { color: var(--text-primary); }
+
+  .metric-section { margin-bottom: 18px; }
+  .metric-section:last-child { margin-bottom: 0; }
+  .metric-section h3 {
+    font-size: 12px; text-transform: uppercase; letter-spacing: 0.03em;
+    color: var(--text-secondary); margin: 0 0 8px; display: flex; align-items: center; gap: 8px;
+  }
+  .reason-row {
+    display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--gridline); font-size: 13px;
+  }
+  .reason-row:last-child { border-bottom: none; }
+  .reason-row .icon { flex: 0 0 auto; font-size: 12px; font-weight: 700; width: 16px; text-align: center; }
+  .reason-row.ok .icon { color: var(--good); }
+  .reason-row.bad .icon { color: var(--critical); }
+  .reason-row .content { flex: 1; }
+  .reason-row .claim { color: var(--text-primary); margin-bottom: 2px; }
+  .reason-row .why { color: var(--text-secondary); font-size: 12px; }
+  .reason-row .sim { font-variant-numeric: tabular-nums; color: var(--text-muted); font-size: 11px; flex: 0 0 auto; }
+
+  footer { font-size: 11px; color: var(--text-muted); margin-top: 8px; }
+</style>
+
+<div class="viz-root">
+  <div class="wrap">
+    <p class="eyebrow">Riverside Hospital chatbot &middot; Ragas RAG eval</p>
+    <h1>RAG eval scores, with reasoning</h1>
+    <p class="subtitle">Questions from tests/rag_ground_truth.csv, answered by the real /chat endpoint. Each score below is backed by the same claim-by-claim, chunk-by-chunk reasoning Ragas computed internally &mdash; click a question to see it.</p>
+
+    <div class="stat-row" id="statRow"></div>
+
+    <div class="panel">
+      <h2>Summary</h2>
+      <p class="desc">Click a row to jump to its full reasoning below.</p>
+      <table class="summary" id="summaryTable"></table>
+    </div>
+
+    <div id="questionCards"></div>
+
+    <footer>Generated by scripts/ragas_rag_eval.py against the live /chat endpoint. Regenerated on every run.</footer>
+  </div>
+</div>
+
+<script>
+const DATA = __DATA__;
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+function band(score) {
+  if (score >= 0.8) return "good";
+  if (score >= 0.5) return "warning";
+  return "critical";
+}
+function icon(b) {
+  return b === "good" ? "&check;" : b === "warning" ? "&#9888;" : "&times;";
+}
+function label(b) {
+  return b === "good" ? "Good" : b === "warning" ? "Needs review" : "Low";
+}
+function badge(name, score) {
+  const b = band(score);
+  return `<span class="badge ${b}"><span class="icon">${icon(b)}</span>${name} ${score.toFixed(2)} &middot; ${label(b)}</span>`;
+}
+
+const metrics = ["faithfulness", "answer_relevancy", "context_precision"];
+const labels = {faithfulness: "Avg Faithfulness", answer_relevancy: "Avg Answer Relevancy", context_precision: "Avg Context Precision"};
+const statRow = document.getElementById("statRow");
+statRow.innerHTML = metrics.map(m => {
+  const avg = DATA.reduce((s, d) => s + d[m].score, 0) / DATA.length;
+  return `<div class="stat-tile"><div class="label">${labels[m]}</div><div class="value">${avg.toFixed(2)}</div></div>`;
+}).join("");
+
+const summaryTable = document.getElementById("summaryTable");
+summaryTable.innerHTML = `<tr><th>Question</th><th>Faithfulness</th><th>Answer Relevancy</th><th>Context Precision</th></tr>` +
+  DATA.map((d, i) => `
+    <tr class="summary-row" data-target="q${i}">
+      <td>${escapeHtml(d.question)}</td>
+      <td>${badge("", d.faithfulness.score)}</td>
+      <td>${badge("", d.answer_relevancy.score)}</td>
+      <td>${badge("", d.context_precision.score)}</td>
+    </tr>
+  `).join("");
+
+summaryTable.querySelectorAll(".summary-row").forEach(row => {
+  row.addEventListener("click", () => {
+    const target = document.getElementById(row.dataset.target);
+    target.open = true;
+    target.scrollIntoView({behavior: "smooth", block: "center"});
+  });
+});
+
+const cardsEl = document.getElementById("questionCards");
+cardsEl.innerHTML = DATA.map((d, i) => `
+  <details class="qcard" id="q${i}">
+    <summary>
+      <span class="qtext">${escapeHtml(d.question)}</span>
+      <span class="badges">
+        ${badge("Faith", d.faithfulness.score)}
+        ${badge("Relev", d.answer_relevancy.score)}
+        ${badge("Prec", d.context_precision.score)}
+      </span>
+    </summary>
+    <div class="body">
+      <div class="answer-block"><b>Answer:</b> ${escapeHtml(d.answer)}</div>
+
+      <div class="metric-section">
+        <h3>Faithfulness ${badge("", d.faithfulness.score)}</h3>
+        ${d.faithfulness.reasoning.map(r => `
+          <div class="reason-row ${r.faithful ? 'ok' : 'bad'}">
+            <span class="icon">${r.faithful ? '&check;' : '&times;'}</span>
+            <div class="content">
+              <div class="claim">${escapeHtml(r.statement)}</div>
+              <div class="why">${escapeHtml(r.reason)}</div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+
+      <div class="metric-section">
+        <h3>Answer Relevancy ${badge("", d.answer_relevancy.score)}</h3>
+        ${d.answer_relevancy.reasoning.slice(0, 1).map(r => `
+          <div class="reason-row ${r.similarity_to_original >= 0.7 ? 'ok' : 'bad'}">
+            <span class="icon">${r.similarity_to_original >= 0.7 ? '&check;' : '&times;'}</span>
+            <div class="content">
+              <div class="claim">Reverse-engineered question: &ldquo;${escapeHtml(r.generated_question)}&rdquo;${r.noncommittal ? ' <span style="color:var(--critical)">(flagged non-committal)</span>' : ''}</div>
+              <div class="why">Compared to the original question via embedding cosine similarity &mdash; the lower this is, the more the answer's content drifted from what was actually asked.</div>
+            </div>
+            <span class="sim">sim ${r.similarity_to_original.toFixed(2)}</span>
+          </div>
+        `).join("")}
+      </div>
+
+      <div class="metric-section">
+        <h3>Context Precision ${badge("", d.context_precision.score)}</h3>
+        ${d.context_precision.reasoning.map(r => `
+          <div class="reason-row ${r.relevant ? 'ok' : 'bad'}">
+            <span class="icon">${r.relevant ? '&check;' : '&times;'}</span>
+            <div class="content">
+              <div class="claim">${escapeHtml(r.context_preview)}</div>
+              <div class="why">${escapeHtml(r.reason)}</div>
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  </details>
+`).join("");
+</script>
