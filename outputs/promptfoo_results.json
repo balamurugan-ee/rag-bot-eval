@@ -1,8 +1,8 @@
 {
-  "evalId": "eval-8Zg-2026-08-14T02:59:13",
+  "evalId": "eval-Ooj-2026-08-14T09:56:57",
   "results": {
     "version": 3,
-    "timestamp": "2026-08-14T02:59:13.968Z",
+    "timestamp": "2026-08-14T09:56:57.810Z",
     "prompts": [
       {
         "id": "21e536caf6f2870857967c9a82beb9093b792433e6d1deef3661148f3e61785b",
@@ -10,13 +10,13 @@
         "label": "{{message}}",
         "provider": "classifier",
         "metrics": {
-          "score": 20,
-          "testPassCount": 20,
-          "testFailCount": 0,
+          "score": 16,
+          "testPassCount": 16,
+          "testFailCount": 4,
           "testErrorCount": 0,
-          "assertPassCount": 20,
-          "assertFailCount": 0,
-          "totalLatencyMs": 68220,
+          "assertPassCount": 16,
+          "assertFailCount": 4,
+          "totalLatencyMs": 63117,
           "tokenUsage": {
             "prompt": 0,
             "completion": 0,
@@ -79,8 +79,8 @@
             }
           ]
         },
-        "id": "39015c3b-39ae-49c1-a24f-746c95dc45d2",
-        "latencyMs": 3646,
+        "id": "6e5d071f-158a-4c42-8988-751d33907421",
+        "latencyMs": 1068,
         "namedScores": {},
         "prompt": {
           "raw": "I have been having chest pain for two days",
@@ -95,8 +95,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Cardiology\"}",
-          "latencyMs": 3646,
-          "cached": false,
+          "latencyMs": 1068,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -104,7 +104,7 @@
               "headers": {
                 "content-length": "27",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -196,7 +196,7 @@
             "headers": {
               "content-length": "27",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -230,8 +230,8 @@
             }
           ]
         },
-        "id": "890586a6-70c7-4bf1-bafc-f5480fc2dd53",
-        "latencyMs": 5586,
+        "id": "43246413-e913-44e6-ad6d-c025e702af10",
+        "latencyMs": 3680,
         "namedScores": {},
         "prompt": {
           "raw": "My child has had a fever since yesterday",
@@ -246,8 +246,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Pediatrics\"}",
-          "latencyMs": 5586,
-          "cached": false,
+          "latencyMs": 3680,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -255,7 +255,7 @@
               "headers": {
                 "content-length": "27",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -347,7 +347,7 @@
             "headers": {
               "content-length": "27",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -381,8 +381,8 @@
             }
           ]
         },
-        "id": "7b1463fa-fefc-414b-adc4-954bf4935bb8",
-        "latencyMs": 5573,
+        "id": "f588a672-01ad-47ff-9c48-50a6e7b6a121",
+        "latencyMs": 3683,
         "namedScores": {},
         "prompt": {
           "raw": "I need to schedule an MRI scan",
@@ -397,8 +397,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Radiology\"}",
-          "latencyMs": 5573,
-          "cached": false,
+          "latencyMs": 3683,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -406,7 +406,7 @@
               "headers": {
                 "content-length": "26",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -498,7 +498,7 @@
             "headers": {
               "content-length": "26",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -532,8 +532,8 @@
             }
           ]
         },
-        "id": "2543d516-14a4-4c1e-a9bb-6a0ef5e4ec8d",
-        "latencyMs": 5548,
+        "id": "5c693e5f-e5f0-4953-a3e6-c12b86377814",
+        "latencyMs": 3676,
         "namedScores": {},
         "prompt": {
           "raw": "I have severe back pain after lifting weights",
@@ -548,8 +548,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Orthopedics\"}",
-          "latencyMs": 5548,
-          "cached": false,
+          "latencyMs": 3676,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -557,7 +557,7 @@
               "headers": {
                 "content-length": "28",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -649,7 +649,7 @@
             "headers": {
               "content-length": "28",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -683,8 +683,8 @@
             }
           ]
         },
-        "id": "8090593f-6c0d-42ba-a2fa-3946f0c179a7",
-        "latencyMs": 2489,
+        "id": "965c5dbb-0f6a-4f8f-9034-0700660c7096",
+        "latencyMs": 3263,
         "namedScores": {},
         "prompt": {
           "raw": "I need to speak to someone about my hospital bill",
@@ -699,8 +699,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Billing\"}",
-          "latencyMs": 2489,
-          "cached": false,
+          "latencyMs": 3263,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -708,7 +708,7 @@
               "headers": {
                 "content-length": "24",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -800,7 +800,7 @@
             "headers": {
               "content-length": "24",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -834,8 +834,8 @@
             }
           ]
         },
-        "id": "d7b26324-399b-4159-8c03-df165e73b380",
-        "latencyMs": 3336,
+        "id": "011ffd21-0acf-43e0-984f-3e2f7e92902a",
+        "latencyMs": 2869,
         "namedScores": {},
         "prompt": {
           "raw": "Where can I get my prescription filled?",
@@ -850,8 +850,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Pharmacy\"}",
-          "latencyMs": 3336,
-          "cached": false,
+          "latencyMs": 2869,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -859,7 +859,7 @@
               "headers": {
                 "content-length": "25",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -951,7 +951,7 @@
             "headers": {
               "content-length": "25",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -985,8 +985,8 @@
             }
           ]
         },
-        "id": "8777cbc8-493e-4380-8684-af92fdc90d27",
-        "latencyMs": 3344,
+        "id": "9a250250-e70a-402b-8b33-a16575aa893a",
+        "latencyMs": 2871,
         "namedScores": {},
         "prompt": {
           "raw": "I have chest pain and I'm really anxious",
@@ -1001,8 +1001,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Cardiology\"}",
-          "latencyMs": 3344,
-          "cached": false,
+          "latencyMs": 2871,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -1010,7 +1010,7 @@
               "headers": {
                 "content-length": "27",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -1102,7 +1102,7 @@
             "headers": {
               "content-length": "27",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -1136,8 +1136,8 @@
             }
           ]
         },
-        "id": "8b95fc54-a99b-42c5-9275-2cdfec6595eb",
-        "latencyMs": 3346,
+        "id": "dc919d38-7dac-4654-8877-f2d71cda25fe",
+        "latencyMs": 2863,
         "namedScores": {},
         "prompt": {
           "raw": "My child has a red, itchy rash and a mild fever",
@@ -1152,8 +1152,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Pediatrics\"}",
-          "latencyMs": 3346,
-          "cached": false,
+          "latencyMs": 2863,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -1161,7 +1161,7 @@
               "headers": {
                 "content-length": "27",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -1253,7 +1253,7 @@
             "headers": {
               "content-length": "27",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -1287,8 +1287,8 @@
             }
           ]
         },
-        "id": "2db5dc0c-6d34-483f-8199-951df4921db0",
-        "latencyMs": 3457,
+        "id": "a2656553-2bd2-4b9b-8863-eeae50b1d7a4",
+        "latencyMs": 1398,
         "namedScores": {},
         "prompt": {
           "raw": "I have blurred vision and mild headache",
@@ -1303,8 +1303,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Ophthalmology\"}",
-          "latencyMs": 3457,
-          "cached": false,
+          "latencyMs": 1398,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -1312,7 +1312,7 @@
               "headers": {
                 "content-length": "30",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Fri, 14 Aug 2026 02:46:41 GMT",
                 "server": "uvicorn"
               }
             }
@@ -1404,7 +1404,7 @@
             "headers": {
               "content-length": "30",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Fri, 14 Aug 2026 02:46:41 GMT",
               "server": "uvicorn"
             }
           },
@@ -1438,8 +1438,8 @@
             }
           ]
         },
-        "id": "0f655439-5787-4bad-8d61-8a1a5507a154",
-        "latencyMs": 3406,
+        "id": "d7e646b8-6e5d-44b6-8b02-a0c55c20fe07",
+        "latencyMs": 2966,
         "namedScores": {},
         "prompt": {
           "raw": "I need an X-ray for my fractured arm",
@@ -1454,8 +1454,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Radiology\"}",
-          "latencyMs": 3406,
-          "cached": false,
+          "latencyMs": 2966,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -1463,7 +1463,7 @@
               "headers": {
                 "content-length": "26",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -1555,7 +1555,7 @@
             "headers": {
               "content-length": "26",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -1589,8 +1589,8 @@
             }
           ]
         },
-        "id": "9c5bba78-352e-4f42-9287-1af3c705f5fe",
-        "latencyMs": 3421,
+        "id": "45ebff29-b656-4f39-aaf3-759e740bc544",
+        "latencyMs": 2967,
         "namedScores": {},
         "prompt": {
           "raw": "Can you check if my insurance covers an MRI scan",
@@ -1605,8 +1605,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Billing\"}",
-          "latencyMs": 3421,
-          "cached": false,
+          "latencyMs": 2967,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -1614,7 +1614,7 @@
               "headers": {
                 "content-length": "24",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -1706,7 +1706,7 @@
             "headers": {
               "content-length": "24",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -1740,8 +1740,8 @@
             }
           ]
         },
-        "id": "841e95c5-8bf1-4a5c-b346-12d2996009a6",
-        "latencyMs": 3422,
+        "id": "65407e88-2bea-41ea-9048-5886de4c0174",
+        "latencyMs": 2959,
         "namedScores": {},
         "prompt": {
           "raw": "My eyes have been really itchy and I'm struggling to focus on things up close",
@@ -1756,8 +1756,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Ophthalmology\"}",
-          "latencyMs": 3422,
-          "cached": false,
+          "latencyMs": 2959,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -1765,7 +1765,7 @@
               "headers": {
                 "content-length": "30",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -1857,7 +1857,7 @@
             "headers": {
               "content-length": "30",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -1891,8 +1891,8 @@
             }
           ]
         },
-        "id": "1771d3cf-6600-4a7c-8879-8a56e77824c4",
-        "latencyMs": 3364,
+        "id": "61fa4132-110f-4b16-bfb4-8cc38e3f6a5b",
+        "latencyMs": 3038,
         "namedScores": {},
         "prompt": {
           "raw": "I've been having severe migraines along with numbness in my hands",
@@ -1907,8 +1907,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Neurology\"}",
-          "latencyMs": 3364,
-          "cached": false,
+          "latencyMs": 3038,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -1916,7 +1916,7 @@
               "headers": {
                 "content-length": "26",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
@@ -2008,7 +2008,7 @@
             "headers": {
               "content-length": "26",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
@@ -2018,10 +2018,11 @@
       },
       {
         "cost": 0,
+        "error": "Expected output \"General Medicine\" to equal \"Cardiology\"",
         "gradingResult": {
-          "pass": true,
-          "score": 1,
-          "reason": "All assertions passed",
+          "pass": false,
+          "score": 0,
+          "reason": "Expected output \"General Medicine\" to equal \"Cardiology\"",
           "namedScores": {},
           "tokensUsed": {
             "total": 0,
@@ -2032,9 +2033,9 @@
           },
           "componentResults": [
             {
-              "pass": true,
-              "score": 1,
-              "reason": "Assertion passed",
+              "pass": false,
+              "score": 0,
+              "reason": "Expected output \"General Medicine\" to equal \"Cardiology\"",
               "assertion": {
                 "type": "equals",
                 "value": "Cardiology"
@@ -2042,8 +2043,8 @@
             }
           ]
         },
-        "id": "022f13ac-99e4-4770-85f1-42f16ded9346",
-        "latencyMs": 2491,
+        "id": "d90878af-baf7-4243-b237-d84e43dc1036",
+        "latencyMs": 3194,
         "namedScores": {},
         "prompt": {
           "raw": "Tell me about the Cardiology department",
@@ -2057,22 +2058,22 @@
           "label": "classifier"
         },
         "response": {
-          "raw": "{\"department\":\"Cardiology\"}",
-          "latencyMs": 2491,
-          "cached": false,
+          "raw": "{\"department\":\"General Medicine\"}",
+          "latencyMs": 3194,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
               "statusText": "OK",
               "headers": {
-                "content-length": "27",
+                "content-length": "33",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
           },
-          "output": "Cardiology",
+          "output": "General Medicine",
           "tokenUsage": {
             "prompt": 0,
             "completion": 0,
@@ -2102,8 +2103,8 @@
             }
           }
         },
-        "score": 1,
-        "success": true,
+        "score": 0,
+        "success": false,
         "testCase": {
           "vars": {
             "message": "Tell me about the Cardiology department",
@@ -2157,22 +2158,23 @@
             "status": 200,
             "statusText": "OK",
             "headers": {
-              "content-length": "27",
+              "content-length": "33",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
           "_promptfooFileMetadata": {}
         },
-        "failureReason": 0
+        "failureReason": 1
       },
       {
         "cost": 0,
+        "error": "Expected output \"Billing\" to equal \"Cardiology\"",
         "gradingResult": {
-          "pass": true,
-          "score": 1,
-          "reason": "All assertions passed",
+          "pass": false,
+          "score": 0,
+          "reason": "Expected output \"Billing\" to equal \"Cardiology\"",
           "namedScores": {},
           "tokensUsed": {
             "total": 0,
@@ -2183,9 +2185,9 @@
           },
           "componentResults": [
             {
-              "pass": true,
-              "score": 1,
-              "reason": "Assertion passed",
+              "pass": false,
+              "score": 0,
+              "reason": "Expected output \"Billing\" to equal \"Cardiology\"",
               "assertion": {
                 "type": "equals",
                 "value": "Cardiology"
@@ -2193,8 +2195,8 @@
             }
           ]
         },
-        "id": "2cd81c9e-50f7-4fa9-9d26-5f0f89a80a18",
-        "latencyMs": 2492,
+        "id": "7a5dc137-4ce0-4ad8-8203-c09ded0778bb",
+        "latencyMs": 3196,
         "namedScores": {},
         "prompt": {
           "raw": "Cardiology hours",
@@ -2208,22 +2210,22 @@
           "label": "classifier"
         },
         "response": {
-          "raw": "{\"department\":\"Cardiology\"}",
-          "latencyMs": 2492,
-          "cached": false,
+          "raw": "{\"department\":\"Billing\"}",
+          "latencyMs": 3196,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
               "statusText": "OK",
               "headers": {
-                "content-length": "27",
+                "content-length": "24",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
           },
-          "output": "Cardiology",
+          "output": "Billing",
           "tokenUsage": {
             "prompt": 0,
             "completion": 0,
@@ -2253,8 +2255,8 @@
             }
           }
         },
-        "score": 1,
-        "success": true,
+        "score": 0,
+        "success": false,
         "testCase": {
           "vars": {
             "message": "Cardiology hours",
@@ -2308,22 +2310,23 @@
             "status": 200,
             "statusText": "OK",
             "headers": {
-              "content-length": "27",
+              "content-length": "24",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
           "_promptfooFileMetadata": {}
         },
-        "failureReason": 0
+        "failureReason": 1
       },
       {
         "cost": 0,
+        "error": "Expected output \"Billing\" to equal \"Radiology\"",
         "gradingResult": {
-          "pass": true,
-          "score": 1,
-          "reason": "All assertions passed",
+          "pass": false,
+          "score": 0,
+          "reason": "Expected output \"Billing\" to equal \"Radiology\"",
           "namedScores": {},
           "tokensUsed": {
             "total": 0,
@@ -2334,9 +2337,9 @@
           },
           "componentResults": [
             {
-              "pass": true,
-              "score": 1,
-              "reason": "Assertion passed",
+              "pass": false,
+              "score": 0,
+              "reason": "Expected output \"Billing\" to equal \"Radiology\"",
               "assertion": {
                 "type": "equals",
                 "value": "Radiology"
@@ -2344,8 +2347,8 @@
             }
           ]
         },
-        "id": "3c49f734-f7be-4f30-888c-f5779dfac029",
-        "latencyMs": 2492,
+        "id": "fd49ded5-1272-4041-940c-b213cbc1c490",
+        "latencyMs": 3188,
         "namedScores": {},
         "prompt": {
           "raw": "When is Radiology open?",
@@ -2359,22 +2362,22 @@
           "label": "classifier"
         },
         "response": {
-          "raw": "{\"department\":\"Radiology\"}",
-          "latencyMs": 2492,
-          "cached": false,
+          "raw": "{\"department\":\"Billing\"}",
+          "latencyMs": 3188,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
               "statusText": "OK",
               "headers": {
-                "content-length": "26",
+                "content-length": "24",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
           },
-          "output": "Radiology",
+          "output": "Billing",
           "tokenUsage": {
             "prompt": 0,
             "completion": 0,
@@ -2404,8 +2407,8 @@
             }
           }
         },
-        "score": 1,
-        "success": true,
+        "score": 0,
+        "success": false,
         "testCase": {
           "vars": {
             "message": "When is Radiology open?",
@@ -2459,22 +2462,23 @@
             "status": 200,
             "statusText": "OK",
             "headers": {
-              "content-length": "26",
+              "content-length": "24",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
           "_promptfooFileMetadata": {}
         },
-        "failureReason": 0
+        "failureReason": 1
       },
       {
         "cost": 0,
+        "error": "Expected output \"General Medicine\" to equal \"Pharmacy\"",
         "gradingResult": {
-          "pass": true,
-          "score": 1,
-          "reason": "All assertions passed",
+          "pass": false,
+          "score": 0,
+          "reason": "Expected output \"General Medicine\" to equal \"Pharmacy\"",
           "namedScores": {},
           "tokensUsed": {
             "total": 0,
@@ -2485,9 +2489,9 @@
           },
           "componentResults": [
             {
-              "pass": true,
-              "score": 1,
-              "reason": "Assertion passed",
+              "pass": false,
+              "score": 0,
+              "reason": "Expected output \"General Medicine\" to equal \"Pharmacy\"",
               "assertion": {
                 "type": "equals",
                 "value": "Pharmacy"
@@ -2495,8 +2499,8 @@
             }
           ]
         },
-        "id": "c7d3753f-3a0a-4330-b4cf-cb965e13bce1",
-        "latencyMs": 2528,
+        "id": "54249cd8-c049-42b8-953d-fd018a145085",
+        "latencyMs": 3085,
         "namedScores": {},
         "prompt": {
           "raw": "Tell me about the Pharmacy department",
@@ -2510,22 +2514,22 @@
           "label": "classifier"
         },
         "response": {
-          "raw": "{\"department\":\"Pharmacy\"}",
-          "latencyMs": 2528,
-          "cached": false,
+          "raw": "{\"department\":\"General Medicine\"}",
+          "latencyMs": 3085,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
               "statusText": "OK",
               "headers": {
-                "content-length": "25",
+                "content-length": "33",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Thu, 13 Aug 2026 07:48:35 GMT",
                 "server": "uvicorn"
               }
             }
           },
-          "output": "Pharmacy",
+          "output": "General Medicine",
           "tokenUsage": {
             "prompt": 0,
             "completion": 0,
@@ -2555,8 +2559,8 @@
             }
           }
         },
-        "score": 1,
-        "success": true,
+        "score": 0,
+        "success": false,
         "testCase": {
           "vars": {
             "message": "Tell me about the Pharmacy department",
@@ -2610,15 +2614,15 @@
             "status": 200,
             "statusText": "OK",
             "headers": {
-              "content-length": "25",
+              "content-length": "33",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Thu, 13 Aug 2026 07:48:35 GMT",
               "server": "uvicorn"
             }
           },
           "_promptfooFileMetadata": {}
         },
-        "failureReason": 0
+        "failureReason": 1
       },
       {
         "cost": 0,
@@ -2646,8 +2650,8 @@
             }
           ]
         },
-        "id": "bf6cb8a2-3968-4a74-8cb1-206fdfb9fe59",
-        "latencyMs": 2751,
+        "id": "39c46650-fd90-4a66-b8b3-014ee41b75bf",
+        "latencyMs": 4389,
         "namedScores": {},
         "prompt": {
           "raw": "I want to take a MRI scan, how much will it cost",
@@ -2662,8 +2666,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Billing\"}",
-          "latencyMs": 2751,
-          "cached": false,
+          "latencyMs": 4389,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -2671,7 +2675,7 @@
               "headers": {
                 "content-length": "24",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Fri, 14 Aug 2026 02:46:41 GMT",
                 "server": "uvicorn"
               }
             }
@@ -2763,7 +2767,7 @@
             "headers": {
               "content-length": "24",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Fri, 14 Aug 2026 02:46:41 GMT",
               "server": "uvicorn"
             }
           },
@@ -2797,8 +2801,8 @@
             }
           ]
         },
-        "id": "e22a73fa-717d-4489-bf28-4e99ee52e069",
-        "latencyMs": 2762,
+        "id": "10749ca7-7bc2-469b-a894-f4984d18fe0d",
+        "latencyMs": 4384,
         "namedScores": {},
         "prompt": {
           "raw": "Can I get my MRI report today? ",
@@ -2813,8 +2817,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Radiology\"}",
-          "latencyMs": 2762,
-          "cached": false,
+          "latencyMs": 4384,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -2822,7 +2826,7 @@
               "headers": {
                 "content-length": "26",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Fri, 14 Aug 2026 02:46:41 GMT",
                 "server": "uvicorn"
               }
             }
@@ -2914,7 +2918,7 @@
             "headers": {
               "content-length": "26",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Fri, 14 Aug 2026 02:46:41 GMT",
               "server": "uvicorn"
             }
           },
@@ -2948,8 +2952,8 @@
             }
           ]
         },
-        "id": "71b47223-41eb-4529-a715-a33752e60fa3",
-        "latencyMs": 2766,
+        "id": "08690e10-e4f3-4912-93bf-68696a181fe2",
+        "latencyMs": 4380,
         "namedScores": {},
         "prompt": {
           "raw": "I want to book an X-ray appointment ",
@@ -2964,8 +2968,8 @@
         },
         "response": {
           "raw": "{\"department\":\"Radiology\"}",
-          "latencyMs": 2766,
-          "cached": false,
+          "latencyMs": 4380,
+          "cached": true,
           "metadata": {
             "http": {
               "status": 200,
@@ -2973,7 +2977,7 @@
               "headers": {
                 "content-length": "26",
                 "content-type": "application/json",
-                "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+                "date": "Fri, 14 Aug 2026 02:46:41 GMT",
                 "server": "uvicorn"
               }
             }
@@ -3065,7 +3069,7 @@
             "headers": {
               "content-length": "26",
               "content-type": "application/json",
-              "date": "Fri, 14 Aug 2026 02:59:13 GMT",
+              "date": "Fri, 14 Aug 2026 02:46:41 GMT",
               "server": "uvicorn"
             }
           },
@@ -3075,8 +3079,8 @@
       }
     ],
     "stats": {
-      "successes": 20,
-      "failures": 0,
+      "successes": 16,
+      "failures": 4,
       "errors": 0,
       "tokenUsage": {
         "prompt": 0,
@@ -3106,8 +3110,8 @@
           }
         }
       },
-      "durationMs": 17652,
-      "evaluationDurationMs": 17652
+      "durationMs": 60,
+      "evaluationDurationMs": 60
     }
   },
   "config": {
@@ -3428,8 +3432,8 @@
     "nodeVersion": "v26.7.0",
     "platform": "darwin",
     "arch": "arm64",
-    "exportedAt": "2026-08-14T02:59:31.667Z",
-    "evaluationCreatedAt": "2026-08-14T02:59:13.968Z"
+    "exportedAt": "2026-08-14T09:56:57.902Z",
+    "evaluationCreatedAt": "2026-08-14T09:56:57.810Z"
   },
   "vars": [
     "message",
@@ -3440,6 +3444,6 @@
     "showProgressBar": true,
     "repeat": 1,
     "maxConcurrency": 4,
-    "cache": false
+    "cache": true
   }
 }

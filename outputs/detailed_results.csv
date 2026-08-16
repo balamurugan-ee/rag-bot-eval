@@ -12,10 +12,10 @@ I need an X-ray for my fractured arm,Radiology,Radiology,True
 Can you check if my insurance covers an MRI scan,Billing,Billing,True
 My eyes have been really itchy and I'm struggling to focus on things up close,Ophthalmology,Ophthalmology,True
 I've been having severe migraines along with numbness in my hands,Neurology,Neurology,True
-Tell me about the Cardiology department,Cardiology,Cardiology,True
-Cardiology hours,Cardiology,Cardiology,True
-When is Radiology open?,Radiology,Radiology,True
-Tell me about the Pharmacy department,Pharmacy,Pharmacy,True
+Tell me about the Cardiology department,Cardiology,General Medicine,False
+Cardiology hours,Cardiology,Billing,False
+When is Radiology open?,Radiology,Billing,False
+Tell me about the Pharmacy department,Pharmacy,General Medicine,False
 "I want to take a MRI scan, how much will it cost",Billing,Billing,True
 Can I get my MRI report today? ,Radiology,Radiology,True
 I want to book an X-ray appointment ,Radiology,Radiology,True
