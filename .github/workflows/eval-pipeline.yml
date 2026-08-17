@@ -30,7 +30,7 @@ on:
 jobs:
   classifyeval:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 10
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -88,6 +88,9 @@ jobs:
       - name: Run RAG eval (70% threshold)
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          RAG_MAX_PARALLEL: "5"
+          RAG_RETRIEVAL_K: "2"
+          RAG_SAMPLE_SIZE: ${{ github.event_name == 'pull_request' && '8' || '' }}
         run: python scripts/ragas_rag_eval.py
 
       - name: Upload RAG artifacts

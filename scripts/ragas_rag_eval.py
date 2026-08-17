@@ -1,36 +1,8 @@
-"""
-Ragas evaluation for RAG receptionist, testing the REAL /chat endpoint.
-
-RETRIEVAL METRICS (evaluate quality of retrieved context):
-  - Context Precision: Of the retrieved chunks, how many were relevant to 
-    producing the expected answer?
-  - Context Recall: Did retrieval fetch everything needed to support the 
-    expected answer?
-
-GENERATION METRICS (evaluate quality of generated answer):
-  - Faithfulness: Does the answer only contain claims traceable to the
-    retrieved context?
-  - Answer Correctness: Does the answer match the expected answer, both
-    factually (TP/FP/FN claim overlap) and semantically?
-
-Answer Relevancy was dropped: its "noncommittal" flag zeroed out correct terse
-answers (e.g. scored 0.00 despite 0.90 underlying similarity), and it penalized
-answers for including extra correct detail beyond the literal question. Both
-behaviors produced misleading scores rather than real quality signal.
-
-The answer being graded comes from a real HTTP call to /chat, testing what's
-actually deployed. Retrieved contexts come from an independent vector store
-call since /chat only returns {response}.
-
-This script captures full reasoning for each metric, not just final scores.
-
-Output: Console output with reasoning, JSON dump (tests/ragas_results.json),
-and interactive HTML report (tests/ragas_report.html).
-"""
 import asyncio
 import csv
 import json
 import sys
+import os
 from pathlib import Path
 
 # Add project root to Python path
@@ -68,6 +40,11 @@ CHAT_URL = "http://localhost:8000/chat"
 # refusal-type answers (a correct refusal isn't "grounded in retrieved context"
 # by definition), so a low score there doesn't reliably mean a real regression.
 CORRECTNESS_THRESHOLD = 0.7
+
+# Performance tuning
+MAX_PARALLEL = int(os.environ.get("RAG_MAX_PARALLEL", "3"))  # Parallel question processing
+RETRIEVAL_K = int(os.environ.get("RAG_RETRIEVAL_K", "3"))    # Number of contexts to retrieve
+SAMPLE_SIZE = os.environ.get("RAG_SAMPLE_SIZE")              # Optional: sample N questions
 
 
 def write_html_report(results):
@@ -230,7 +207,45 @@ def print_results(retrieval_scores: dict, generation_scores: dict):
         print(f"  [MISSING] {s['statement']}")
 
 
+async def process_single_question(row, vector_store, retrieval_metrics, generation_metrics):
+    """Process a single question with all metrics."""
+    question = row["question"]
+    
+    # Make HTTP call in thread to avoid blocking
+    answer = await asyncio.to_thread(get_real_answer, question)
+    
+    # Retrieve contexts
+    contexts = [c.page_content for c in vector_store.similarity_search(question, k=RETRIEVAL_K)]
+    expected_answer = row["expected_answer"]
+    
+    # Score metrics
+    retrieval_scores = await score_retrieval_metrics(retrieval_metrics, question, expected_answer, contexts)
+    generation_scores = await score_generation_metrics(generation_metrics, question, answer, expected_answer, contexts)
+    
+    # Display results
+    print(f"\nQ: {question}")
+    print(f"Expected: {expected_answer}")
+    print(f"A: {answer}")
+    print_results(retrieval_scores, generation_scores)
+    print("\n" + "=" * 80 + "\n")
+    
+    return {
+        "question": question,
+        "expected_answer": expected_answer,
+        "category": row["category"],
+        "answer": answer,
+        "retrieved_contexts": contexts,
+        "retrieval_metrics": retrieval_scores,
+        "generation_metrics": generation_scores,
+        # Flatten for backward compatibility
+        **retrieval_scores,
+        **generation_scores,
+    }
+
+
 async def main():
+    print(f"⚡ Performance settings: MAX_PARALLEL={MAX_PARALLEL}, RETRIEVAL_K={RETRIEVAL_K}, SAMPLE_SIZE={SAMPLE_SIZE or 'all'}")
+    
     # Initialize services
     vector_store = VectorStoreManager()
     vector_store.initialize()
@@ -250,39 +265,24 @@ async def main():
         'answer_correctness': AnswerCorrectness(llm=ragas_llm, embeddings=ragas_embeddings),
     }
 
-    # Process each test case
-    results = []
-    for row in load_rows():
-        question = row["question"]
-        answer = get_real_answer(question)
-        contexts = [c.page_content for c in vector_store.similarity_search(question, k=3)]
-        expected_answer = row["expected_answer"]
-
-        # Score metrics by category
-        retrieval_scores = await score_retrieval_metrics(retrieval_metrics, question, expected_answer, contexts)
-        generation_scores = await score_generation_metrics(generation_metrics, question, answer, expected_answer, contexts)
-
-        # Display results
-        print(f"\nQ: {question}")
-        print(f"Expected: {expected_answer}")
-        print(f"A: {answer}")
-        print_results(retrieval_scores, generation_scores)
-        print("\n" + "=" * 80 + "\n")
-
-        # Store results
-        results.append({
-            "question": question,
-            "expected_answer": expected_answer,
-            "category": row["category"],
-            "answer": answer,
-            "retrieved_contexts": contexts,
-            "retrieval_metrics": retrieval_scores,
-            "generation_metrics": generation_scores,
-            # Flatten for backward compatibility
-            **retrieval_scores,
-            **generation_scores,
-        })
-
+    # Load and optionally sample questions
+    rows = load_rows()
+    if SAMPLE_SIZE:
+        sample_count = int(SAMPLE_SIZE)
+        rows = rows[:sample_count]
+        print(f"📊 Sampling {sample_count} questions for quick validation")
+    
+    print(f"Processing {len(rows)} questions with up to {MAX_PARALLEL} parallel workers...")
+    
+    # Process questions in parallel with concurrency limit
+    semaphore = asyncio.Semaphore(MAX_PARALLEL)
+    
+    async def process_with_limit(row):
+        async with semaphore:
+            return await process_single_question(row, vector_store, retrieval_metrics, generation_metrics)
+    
+    results = await asyncio.gather(*[process_with_limit(row) for row in rows])
+    
     # Save outputs
     JSON_OUTPUT_PATH.write_text(json.dumps(results, indent=2))
     print(f"Full results with reasoning written to {JSON_OUTPUT_PATH}")

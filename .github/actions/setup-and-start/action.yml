@@ -16,13 +16,15 @@ runs:
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
-        python-version: "3.11"
+        python-version: "3.13"
+        cache: 'pip'
 
     - name: Setup Node.js
       if: inputs.install-promptfoo == 'true'
       uses: actions/setup-node@v4
       with:
-        node-version: "20"
+        node-version: "24"
+        cache: 'npm'
 
     - name: Install Python dependencies
       shell: bash
@@ -50,4 +52,3 @@ runs:
         echo "Server failed to start within timeout."
         cat server.log
         exit 1
-
