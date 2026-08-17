@@ -21,3 +21,5 @@ openinference-instrumentation-langchain
 opentelemetry-instrumentation-fastapi
 
 ragas==0.4.3
+
+streamlit>=1.32.0
