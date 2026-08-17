@@ -3,7 +3,9 @@ Consolidated GitHub Actions step summary for the eval pipeline.
 
 Reads both stages' JSON output (promptfoo classification results + Ragas RAG
 results) and writes ONE combined Markdown summary: an overall table with
-both stages' pass/fail and scores, followed by per-stage detail tables.
+both stages' pass/fail and scores, a callout for any individual failures,
+and per-stage detail tables collapsed behind <details> so the page stays
+scannable regardless of how many test cases exist.
 
 This is the single source of truth for the pipeline's step summary -- the
 individual eval scripts (check_promptfoo_threshold.py, ragas_rag_eval.py)
@@ -25,6 +27,12 @@ RAG_RESULTS_PATH = Path("tests") / "ragas_results.json"
 CLASSIFICATION_THRESHOLD = 0.90
 RAG_THRESHOLD = 0.70
 
+CLASSIFICATION_ICON = "\U0001F3F7️"  # 🏷️
+RAG_ICON = "\U0001F4DA"  # 📚
+PASS_ICON = "✅"  # ✅
+FAIL_ICON = "❌"  # ❌
+WARN_ICON = "⚠️"  # ⚠️
+
 
 def load_classification():
     if not CLASSIFICATION_RESULTS_PATH.exists():
@@ -45,6 +53,10 @@ def load_rag():
     return {"results": results, "avg_correctness": avg_correctness}
 
 
+def status_badge(is_pass):
+    return f"{PASS_ICON} PASS" if is_pass else f"{FAIL_ICON} FAIL"
+
+
 def main():
     classification = load_classification()
     rag = load_rag()
@@ -57,38 +69,58 @@ def main():
     if classification:
         c_pass = classification["accuracy"] >= CLASSIFICATION_THRESHOLD
         lines.append(
-            f"| Classification | {'PASS' if c_pass else 'FAIL'} | "
+            f"| {CLASSIFICATION_ICON} Classification | {status_badge(c_pass)} | "
             f"{classification['accuracy']:.1%} ({classification['passed']}/{classification['total']}) | "
             f"{CLASSIFICATION_THRESHOLD:.0%} |"
         )
     else:
         c_pass = False
-        lines.append("| Classification | DID NOT RUN | -- | -- |")
+        lines.append(f"| {CLASSIFICATION_ICON} Classification | {WARN_ICON} DID NOT RUN | -- | -- |")
 
     if rag:
         r_pass = rag["avg_correctness"] >= RAG_THRESHOLD
-        lines.append(f"| RAG | {'PASS' if r_pass else 'FAIL'} | {rag['avg_correctness']:.1%} | {RAG_THRESHOLD:.0%} |")
+        lines.append(
+            f"| {RAG_ICON} RAG | {status_badge(r_pass)} | {rag['avg_correctness']:.1%} | {RAG_THRESHOLD:.0%} |"
+        )
     else:
         r_pass = False
-        lines.append("| RAG | DID NOT RUN (skipped if the classification gate failed) | -- | -- |")
+        lines.append(f"| {RAG_ICON} RAG | {WARN_ICON} DID NOT RUN (skipped if the classification gate failed) | -- | -- |")
 
     overall_pass = c_pass and r_pass
-    lines += ["", f"**Overall: {'PASS' if overall_pass else 'FAIL'}**", ""]
+    lines += ["", f"**Overall: {status_badge(overall_pass)}**", ""]
 
-    # --- Classification detail ---
+    # --- Failures callout: only the rows that actually failed, no scanning required ---
+    classification_failures = [r for r in classification["rows"] if not r["gradingResult"]["pass"]] if classification else []
+    rag_failures = [r for r in rag["results"] if r["answer_correctness"]["score"] < RAG_THRESHOLD] if rag else []
+
+    if classification_failures or rag_failures:
+        lines += [f"## {WARN_ICON} Failures", ""]
+        for r in classification_failures:
+            message = r["prompt"]["raw"][:70]
+            expected = r["gradingResult"]["componentResults"][0]["assertion"].get("value", "")
+            got = r["response"]["output"]
+            lines.append(f"- {CLASSIFICATION_ICON} \"{message}\" -- expected `{expected}`, got `{got}`")
+        for r in rag_failures:
+            q = r["question"][:70]
+            lines.append(f"- {RAG_ICON} \"{q}\" -- Answer Correctness {r['answer_correctness']['score']:.2f}")
+        lines.append("")
+
+    # --- Classification detail (collapsed) ---
     if classification:
-        lines += ["## Classification Detail", "", "| Message | Expected | Got | Result |", "| --- | --- | --- | --- |"]
+        lines += [f"<details><summary>{CLASSIFICATION_ICON} Classification Detail ({classification['total']} questions)</summary>", ""]
+        lines += ["| Message | Expected | Got | Result |", "| --- | --- | --- | --- |"]
         for r in classification["rows"]:
             message = r["prompt"]["raw"].replace("|", "\\|")[:60]
             expected = str(r["gradingResult"]["componentResults"][0]["assertion"].get("value", "")).replace("|", "\\|")
             got = str(r["response"]["output"]).replace("|", "\\|")[:80]
-            status = "PASS" if r["gradingResult"]["pass"] else "FAIL"
+            status = status_badge(r["gradingResult"]["pass"])
             lines.append(f"| {message} | {expected} | {got} | {status} |")
-        lines.append("")
+        lines += ["", "</details>", ""]
 
-    # --- RAG detail ---
+    # --- RAG detail (collapsed) ---
     if rag:
-        lines += ["## RAG Detail", "", "| Question | Precision | Recall | Faithfulness | Correctness |", "| --- | --- | --- | --- | --- |"]
+        lines += [f"<details><summary>{RAG_ICON} RAG Detail ({len(rag['results'])} questions)</summary>", ""]
+        lines += ["| Question | Precision | Recall | Faithfulness | Correctness |", "| --- | --- | --- | --- | --- |"]
         for r in rag["results"]:
             q = r["question"].replace("|", "\\|")[:60]
             lines.append(
@@ -104,6 +136,7 @@ def main():
                 cat_rows = [r for r in rag["results"] if r["category"] == cat]
                 cat_avg = sum(r["answer_correctness"]["score"] for r in cat_rows) / len(cat_rows)
                 lines.append(f"| {cat} | {cat_avg:.2f} | {len(cat_rows)} |")
+        lines += ["", "</details>"]
 
     summary = "\n".join(lines)
     print(summary)
