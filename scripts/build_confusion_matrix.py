@@ -359,6 +359,9 @@ def save_outputs(y_true, y_pred, messages, out_dir: Path):
     plt.close()
     print(f"✓ Saved confusion matrix heatmap: {img_path}")
     
+    # 6. Write to GitHub Step Summary if in CI
+    write_github_summary(metrics, cm_df, results_df, out_dir)
+    
     # Print summary to console
     print("\n" + "=" * 70)
     print("CLASSIFICATION METRICS SUMMARY")
@@ -392,6 +395,35 @@ def save_outputs(y_true, y_pred, messages, out_dir: Path):
             print(f"  Expected:  {row['expected']}")
             print(f"  Predicted: {row['predicted']}")
         print("-" * 70)
+
+
+def write_github_summary(metrics, cm_df, results_df, out_dir: Path):
+    """Write confusion matrix summary to GitHub Actions step summary"""
+    import os
+    
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_path:
+        return
+    
+    img_path = out_dir / "confusion_matrix.png"
+    
+    lines = ["", "## 📊 Confusion Matrix", ""]
+    lines.append(f"**Accuracy: {metrics['accuracy']:.2%}** | Precision: {metrics['macro_avg']['precision']:.2%} | Recall: {metrics['macro_avg']['recall']:.2%} | F1: {metrics['macro_avg']['f1_score']:.2%}")
+    lines.append("")
+    lines.append(f"![Confusion Matrix]({img_path})")
+    lines.append("")
+    
+    errors = results_df[results_df["correct"] == False]
+    if len(errors) > 0:
+        lines.append(f"⚠️ **{len(errors)} misclassifications** - See artifacts for details")
+        lines.append("")
+    
+    try:
+        with open(summary_path, "a", encoding="utf-8") as f:
+            f.write("\n".join(lines))
+        print(f"✓ Written to GitHub Step Summary")
+    except Exception as e:
+        print(f"⚠️  Could not write to GitHub Step Summary: {e}")
 
 def main():
     parser = argparse.ArgumentParser(

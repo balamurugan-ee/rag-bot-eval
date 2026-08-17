@@ -1,0 +1,53 @@
+name: 'Setup and Start Server'
+description: 'Install dependencies and start the FastAPI server'
+
+inputs:
+  openai-api-key:
+    description: 'OpenAI API key'
+    required: true
+  install-promptfoo:
+    description: 'Whether to install promptfoo'
+    required: false
+    default: 'false'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Setup Node.js
+      if: inputs.install-promptfoo == 'true'
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - name: Install Python dependencies
+      shell: bash
+      run: pip install -r requirements.txt
+
+    - name: Install promptfoo
+      if: inputs.install-promptfoo == 'true'
+      shell: bash
+      run: npm install -g promptfoo
+
+    - name: Start server
+      shell: bash
+      env:
+        OPENAI_API_KEY: ${{ inputs.openai-api-key }}
+      run: |
+        nohup uvicorn main:app --port 8000 > server.log 2>&1 &
+        echo "Waiting for server to be healthy..."
+        for i in $(seq 1 30); do
+          if curl -sf http://127.0.0.1:8000/health > /dev/null; then
+            echo "Server is up."
+            exit 0
+          fi
+          sleep 2
+        done
+        echo "Server failed to start within timeout."
+        cat server.log
+        exit 1
+
