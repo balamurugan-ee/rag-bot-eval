@@ -12,7 +12,8 @@ on:
       - "promptfoo.classify.yaml"
       - "main.py"
       - "requirements.txt"
-      - ".github"
+      - ".github/workflows/eval-pipeline.yml"
+      - ".github/actions/setup-and-start/action.yml"
   pull_request:
     branches: [main]
     paths:
@@ -25,7 +26,7 @@ on:
       - "main.py"
       - "requirements.txt"
       - ".github/workflows/eval-pipeline.yml"
-      - ".github"
+      - ".github/actions/setup-and-start/action.yml"
   workflow_dispatch: {}
 
 jobs:
