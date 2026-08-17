@@ -26,7 +26,12 @@ and interactive HTML report (tests/ragas_report.html).
 import asyncio
 import csv
 import json
+import sys
 from pathlib import Path
+
+# Add project root to Python path
+PROJECT_ROOT = Path(__file__).parent.parent
+sys.path.insert(0, str(PROJECT_ROOT))
 
 import numpy as np
 import requests
@@ -47,10 +52,11 @@ from ragas.metrics.collections.context_recall.metric import ContextRecallInput, 
 from src.vectordb.manager import VectorStoreManager
 from src.config import settings
 
-CSV_PATH = Path(__file__).parent.parent / "tests" / "rag_ground_truth.csv"
-JSON_OUTPUT_PATH = Path(__file__).parent.parent / "tests" / "ragas_results.json"
-HTML_TEMPLATE_PATH = Path(__file__).parent / "ragas_report_template.html"
-HTML_OUTPUT_PATH = Path(__file__).parent.parent / "tests" / "ragas_report.html"
+# File paths
+CSV_PATH = PROJECT_ROOT / "tests" / "rag_ground_truth.csv"
+JSON_OUTPUT_PATH = PROJECT_ROOT / "tests" / "ragas_results.json"
+HTML_TEMPLATE_PATH = PROJECT_ROOT / "scripts" / "ragas_report_template.html"
+HTML_OUTPUT_PATH = PROJECT_ROOT / "tests" / "ragas_report.html"
 CHAT_URL = "http://localhost:8000/chat"
 
 
@@ -260,9 +266,9 @@ async def main():
     results = []
     for row in load_rows():
         question = row["question"]
-        expected_answer = row["expected_answer"]
         answer = get_real_answer(question)
         contexts = [c.page_content for c in vector_store.similarity_search(question, k=3)]
+        expected_answer = row["expected_answer"]
 
         # Score metrics by category
         retrieval_scores = await score_retrieval_metrics(retrieval_metrics, question, expected_answer, contexts)
