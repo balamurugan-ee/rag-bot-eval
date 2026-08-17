@@ -107,7 +107,7 @@ jobs:
 
       # --- Stage 2: RAG (only reached if Stage 1's gate step above passed,
       # since a failing step stops the job by default) ------------------
-      - name: "Stage 2: Run Ragas RAG eval (70% threshold, writes step summary)"
+      - name: "Stage 2: Run Ragas RAG eval (70% threshold)"
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
@@ -124,6 +124,14 @@ jobs:
             tests/ragas_results.json
             tests/ragas_report.html
           retention-days: 30
+
+      # Combined overall summary -- reads both stages' JSON and writes one
+      # summary (overall table first, then per-stage detail) instead of two
+      # disconnected fragments. if: always() so it still reports clearly
+      # even if Stage 1 failed and Stage 2 never ran.
+      - name: Write combined pipeline summary
+        if: always()
+        run: python scripts/write_pipeline_summary.py
 
   # Only reachable if both stages above passed their quality gates. Stub
   # step standing in for a real deploy job -- demonstrates that a quality
