@@ -2,12 +2,12 @@
 Riverside Hospital Chatbot UI - Production Demo
 Phase 1: Client-side conversation history with Streamlit
 
-Two independent backend flows per message:
-  - POST /classify -> department routing only
-  - POST /chat     -> RAG-grounded answer only
-These are separate concerns in the backend (classification and RAG generation
-were deliberately decoupled), so the UI calls both and renders them together,
-rather than assuming one call returns both.
+Two independent backend flows, one screen, one question, two buttons:
+  - "Classify" -> POST /classify -> department routing only
+  - "Ask"      -> POST /chat     -> RAG-grounded answer only
+Classification and RAG generation are deliberately decoupled in the backend,
+so the UI lets the user explicitly choose which one to run per query instead
+of always calling both together.
 """
 import streamlit as st
 import requests
@@ -44,7 +44,16 @@ class Config:
         "Pharmacy": "#4F5D75",
     }
 
-    PRIMARY_COLOR = "#1A5276"
+    # Equal Experts brand tokens, pulled from the live computed styles at
+    # equalexperts.com (Lexend typeface, sky-blue accent, navy secondary,
+    # near-black header band, flat 0px-radius corners throughout).
+    BRAND_BLUE = "#1795D4"    # primary accent / CTA (their H2s, "Search Site" button)
+    BRAND_NAVY = "#22567C"    # secondary / links
+    BRAND_DARK = "#212526"    # header/nav band
+    BRAND_GRAY_BG = "#F4F4F4" # light section background
+    BRAND_TEXT = "#545454"    # body copy
+
+    PRIMARY_COLOR = BRAND_BLUE
 
     SAMPLE_QUERIES = [
         "What are cardiology department hours?",
@@ -68,36 +77,87 @@ st.set_page_config(
 
 st.markdown(f"""
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+
+    /* Scoped to actual text containers only -- NOT a blanket span/div rule.
+       Streamlit renders its chat-avatar icons as ligature text ("face",
+       "smart_toy") in a Material Symbols icon font; an earlier version of
+       this stylesheet forced Lexend onto every <span> with !important and
+       broke those icons into literal visible words. Text still inherits
+       Lexend from body/.stMarkdown; icon elements are untouched. */
+    html, body, .stMarkdown, .stCaption, p, li, label {{
+        font-family: 'Lexend', sans-serif;
+        color: {Config.BRAND_TEXT};
+    }}
+
+    h1, h2, h3, h4 {{
+        font-family: 'Lexend', sans-serif;
+        font-weight: 500;
+    }}
+
+    .stButton button, .stDownloadButton button, .stTextInput input {{
+        font-family: 'Lexend', sans-serif;
+    }}
+
     /* Main container */
     .main {{
         padding: 0rem 1rem;
     }}
 
-    /* Chat message styling */
+    [data-testid="stAppViewContainer"] {{
+        background-color: #FFFFFF;
+    }}
+
+    /* Header band -- mirrors the dark nav/hero band on equalexperts.com */
+    .ee-header-band {{
+        background-color: {Config.BRAND_DARK};
+        padding: 2rem 2.5rem;
+        margin: 0 0 1.5rem 0;
+    }}
+    /* Plain divs, not h1/p -- avoids fighting Streamlit's own (higher-
+       specificity, !important) heading color rules, which caused the
+       low-contrast gray-on-navy title seen earlier. */
+    .ee-header-title {{
+        color: #FFFFFF;
+        font-family: 'Lexend', sans-serif;
+        font-weight: 400;
+        font-size: 2rem;
+        line-height: 1.3;
+    }}
+    .ee-header-subtitle {{
+        color: #C9CED0;
+        font-family: 'Lexend', sans-serif;
+        margin-top: 0.4rem;
+        font-size: 1rem;
+    }}
+
+    /* Chat message styling -- flat, squared, bordered instead of shadowed */
     .stChatMessage {{
         padding: 1rem;
-        border-radius: 0.5rem;
+        border-radius: 0px;
+        border: 1px solid #E5E5E5;
         margin-bottom: 1rem;
     }}
 
-    /* Department badge */
+    /* Department badge -- flat, brand accent, squared corners */
     .department-badge {{
         display: inline-block;
-        padding: 0.25rem 0.75rem;
-        border-radius: 0.25rem;
-        font-size: 0.8rem;
+        padding: 0.3rem 0.85rem;
+        border-radius: 0px;
+        font-size: 0.78rem;
         font-weight: 600;
-        margin-top: 0.5rem;
+        margin-top: 0.4rem;
         color: white;
-        letter-spacing: 0.01em;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
     }}
 
-    /* Emergency banner */
+    /* Emergency banner -- keeps semantic red (urgency), flat corners */
     .emergency-banner {{
         background-color: #FDF2F2;
         border-left: 4px solid #A93226;
-        padding: 1rem;
-        border-radius: 0.25rem;
+        padding: 1rem 1.25rem;
+        border-radius: 0px;
         margin-bottom: 1.5rem;
         color: #641E16;
     }}
@@ -110,33 +170,85 @@ st.markdown(f"""
         display: inline-block;
         margin-right: 0.5rem;
     }}
+    .status-online {{ background-color: #27AE60; }}
+    .status-offline {{ background-color: #C0392B; }}
 
-    .status-online {{
-        background-color: #27AE60;
-    }}
-
-    .status-offline {{
-        background-color: #C0392B;
-    }}
-
-    /* Welcome card -- flat, professional (no gradient) */
+    /* Welcome card -- flat, bordered, brand accent */
     .welcome-card {{
-        background-color: #F4F6F7;
-        border-left: 4px solid {Config.PRIMARY_COLOR};
-        color: #1C2833;
+        background-color: {Config.BRAND_GRAY_BG};
+        border-left: 4px solid {Config.BRAND_BLUE};
+        color: {Config.BRAND_TEXT};
         padding: 1.5rem 2rem;
-        border-radius: 0.25rem;
+        border-radius: 0px;
         margin-bottom: 2rem;
     }}
     .welcome-card h2 {{
-        color: {Config.PRIMARY_COLOR};
+        color: {Config.BRAND_NAVY};
         margin-top: 0;
+        font-weight: 500;
     }}
 
-    /* Sample query buttons */
+    /* Buttons -- flat, squared, outlined navy by default; the one primary
+       CTA on screen ("Ask") gets the solid brand-blue fill, matching the
+       single-accent-CTA pattern used on equalexperts.com */
+    .stButton button, .stDownloadButton button {{
+        border-radius: 0px;
+        font-weight: 500;
+        border: 1.5px solid {Config.BRAND_NAVY};
+        background-color: #FFFFFF;
+        color: {Config.BRAND_NAVY};
+        padding: 0.6rem 1rem;
+        transition: background-color 0.15s ease, color 0.15s ease;
+    }}
+    .stButton button:hover, .stDownloadButton button:hover {{
+        background-color: {Config.BRAND_NAVY};
+        color: #FFFFFF;
+    }}
+    button[kind="primary"] {{
+        background-color: {Config.BRAND_BLUE} !important;
+        border-color: {Config.BRAND_BLUE} !important;
+        color: #FFFFFF !important;
+    }}
+    button[kind="primary"]:hover {{
+        background-color: {Config.BRAND_NAVY} !important;
+        border-color: {Config.BRAND_NAVY} !important;
+    }}
+
+    /* Sample query (FAQ) buttons -- left-aligned, plain text look */
     .stButton button {{
         width: 100%;
         text-align: left;
+    }}
+
+    /* Text input -- flat, squared, brand-blue focus ring */
+    .stTextInput input {{
+        border-radius: 0px !important;
+        border: 1.5px solid #CCCCCC !important;
+    }}
+    .stTextInput input:focus {{
+        border-color: {Config.BRAND_BLUE} !important;
+        box-shadow: 0 0 0 1px {Config.BRAND_BLUE} !important;
+    }}
+
+    /* Sidebar -- dark band, mirrors EE's nav bar */
+    [data-testid="stSidebar"] {{
+        background-color: {Config.BRAND_DARK};
+    }}
+    [data-testid="stSidebar"] * {{
+        color: #FFFFFF !important;
+    }}
+    [data-testid="stSidebar"] hr {{
+        border-color: rgba(255, 255, 255, 0.15);
+    }}
+    [data-testid="stSidebar"] .stButton button {{
+        background-color: transparent;
+        border: 1.5px solid #FFFFFF;
+        color: #FFFFFF;
+    }}
+    [data-testid="stSidebar"] .stButton button:hover {{
+        background-color: {Config.BRAND_BLUE};
+        border-color: {Config.BRAND_BLUE};
+        color: #FFFFFF;
     }}
 </style>
 """, unsafe_allow_html=True)
@@ -162,6 +274,9 @@ def init_session_state():
 
     if "session_start_time" not in st.session_state:
         st.session_state.session_start_time = datetime.now()
+
+    if "input_key_counter" not in st.session_state:
+        st.session_state.input_key_counter = 0
 
 # ==================== BACKEND COMMUNICATION ====================
 
@@ -255,7 +370,8 @@ def display_welcome_message():
             <li>Diagnostic services information</li>
             <li>Contact details for specific departments</li>
         </ul>
-        <p><strong>Type your question below to get started.</strong></p>
+        <p><strong>Type your question below, then choose <em>Classify</em> to find the right
+        department, or <em>Ask</em> for a detailed answer.</strong></p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -298,7 +414,8 @@ def export_conversation():
 
     for i, msg in enumerate(st.session_state.messages, 1):
         role = "YOU" if msg["role"] == "user" else "ASSISTANT"
-        export_text += f"[{i}] {role}:\n{msg['content']}\n"
+        action_label = {"classify": "Classify", "ask": "Ask"}.get(msg.get("action"), "")
+        export_text += f"[{i}] {role} ({action_label}):\n{msg.get('content') or ''}\n"
         if msg.get("department"):
             export_text += f"   -> Department: {msg['department']}\n"
         export_text += "\n" + "-" * 60 + "\n\n"
@@ -384,65 +501,99 @@ def display_sidebar():
 
 # ==================== CONVERSATION LOGIC ====================
 
-def update_stats(department: str):
+def update_stats(department: str = None):
     """Update conversation statistics"""
     st.session_state.total_queries += 1
     if department:
         current_count = st.session_state.department_stats.get(department, 0)
         st.session_state.department_stats[department] = current_count + 1
 
-def process_user_message(user_input: str):
-    """Process user message: run both backend flows and render the results"""
-    # Add user message to history
+def process_classify_action(query: str):
+    """
+    User pressed 'Classify': run /classify only, store the result. No inline
+    rendering here -- the caller reruns immediately after, and rendering
+    happens uniformly (for both the latest turn and history) in main().
+    """
     st.session_state.messages.append({
         "role": "user",
-        "content": user_input,
+        "content": query,
+        "action": "classify",
         "timestamp": datetime.now().isoformat()
     })
 
-    # Display user message immediately
+    with st.spinner("Classifying..."):
+        try:
+            department = get_department(query)
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": None,
+                "action": "classify",
+                "department": department,
+                "timestamp": datetime.now().isoformat()
+            })
+            update_stats(department)
+            st.session_state.conversation_started = True
+
+        except Exception as e:
+            error_message = f"**Error:** {str(e)}"
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": error_message,
+                "action": "classify",
+                "timestamp": datetime.now().isoformat(),
+                "is_error": True
+            })
+            logger.error(f"Error processing classify action: {e}")
+
+def process_ask_action(query: str):
+    """User pressed 'Ask': run /chat only, store the result (see docstring above)."""
+    st.session_state.messages.append({
+        "role": "user",
+        "content": query,
+        "action": "ask",
+        "timestamp": datetime.now().isoformat()
+    })
+
+    with st.spinner("Thinking..."):
+        try:
+            response_data = send_message_to_backend(query)
+            assistant_message = response_data.get("response", "")
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": assistant_message,
+                "action": "ask",
+                "timestamp": datetime.now().isoformat()
+            })
+            update_stats()
+            st.session_state.conversation_started = True
+
+        except Exception as e:
+            error_message = f"**Error:** {str(e)}"
+            st.session_state.messages.append({
+                "role": "assistant",
+                "content": error_message,
+                "action": "ask",
+                "timestamp": datetime.now().isoformat(),
+                "is_error": True
+            })
+            logger.error(f"Error processing ask action: {e}")
+
+def render_message_pair(user_msg: Dict, assistant_msg: Dict):
+    """Render one user turn + its assistant result as a pair of chat bubbles."""
     with st.chat_message("user"):
-        st.markdown(user_input)
+        action_tag = {"classify": "🏷️ Classify", "ask": "💬 Ask"}.get(user_msg.get("action"), "")
+        if action_tag:
+            st.caption(action_tag)
+        st.markdown(user_msg["content"])
 
-    # Get bot response
     with st.chat_message("assistant"):
-        with st.spinner("Processing..."):
-            try:
-                # Two independent backend flows for this one user turn:
-                # classification (department routing) and chat (RAG answer).
-                department = get_department(user_input)
-                response_data = send_message_to_backend(user_input)
-                assistant_message = response_data.get("response", "")
-
-                # Display response
-                st.markdown(assistant_message)
-                render_department_badge(department)
-
-                # Add to history
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": assistant_message,
-                    "department": department,
-                    "timestamp": datetime.now().isoformat()
-                })
-
-                # Update stats
-                update_stats(department)
-                st.session_state.conversation_started = True
-
-            except Exception as e:
-                error_message = f"**Error:** {str(e)}"
-                st.error(error_message)
-
-                # Add error to history
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": error_message,
-                    "timestamp": datetime.now().isoformat(),
-                    "is_error": True
-                })
-
-                logger.error(f"Error processing message: {e}")
+        if assistant_msg.get("is_error"):
+            st.markdown(assistant_msg["content"])
+        elif assistant_msg.get("action") == "classify":
+            st.markdown("**Department:**")
+            render_department_badge(assistant_msg.get("department"))
+        else:
+            st.markdown(assistant_msg["content"])
 
 # ==================== MAIN APPLICATION ====================
 
@@ -454,9 +605,13 @@ def main():
     # Display sidebar
     display_sidebar()
 
-    # Main content area
-    st.title("Riverside Hospital Virtual Assistant")
-    st.markdown("Ask me anything about our hospital services, departments, timings, and more.")
+    # Main content area -- dark header band, mirrors equalexperts.com's nav/hero
+    st.markdown("""
+    <div class="ee-header-band">
+        <div class="ee-header-title">Riverside Hospital Virtual Assistant</div>
+        <div class="ee-header-subtitle">Ask me anything about our hospital services, departments, timings, and more.</div>
+    </div>
+    """, unsafe_allow_html=True)
 
     # Emergency banner
     display_emergency_banner()
@@ -468,48 +623,66 @@ def main():
         st.info("The backend should be running at http://localhost:8000")
         st.stop()
 
-    # Display conversation history
-    for message in st.session_state.messages:
-        is_user = message["role"] == "user"
-        is_error = message.get("is_error", False)
+    # Single question input, paired with two explicit action buttons. Kept
+    # at the top of the page (not below a growing history) so it's always
+    # in the same place and the result of the latest action always renders
+    # directly below it -- no scrolling to find either.
+    #
+    # The widget key increments after every action so the box starts empty
+    # again on the next run (Streamlit disallows mutating a widget's bound
+    # session_state key after it has already been instantiated this run,
+    # so a fresh key is the simplest safe way to reset it).
+    input_key = f"query_input_{st.session_state.input_key_counter}"
+    query = st.text_input(
+        "Your question",
+        key=input_key,
+        placeholder="e.g. What are cardiology department hours?",
+        label_visibility="collapsed"
+    )
 
-        with st.chat_message(message["role"]):
-            st.markdown(message["content"])
-            if not is_user and not is_error and message.get("department"):
-                render_department_badge(message["department"])
+    btn_col1, btn_col2 = st.columns(2)
+    with btn_col1:
+        classify_clicked = st.button("Classify", use_container_width=True)
+    with btn_col2:
+        ask_clicked = st.button("Ask", type="primary", use_container_width=True)
 
-    # Welcome message for new users
-    if not st.session_state.conversation_started and not st.session_state.messages:
-        display_welcome_message()
-
-    # Handle pending query from sample buttons
-    if hasattr(st.session_state, 'pending_query'):
-        query = st.session_state.pending_query
-        del st.session_state.pending_query
-        process_user_message(query)
+    if classify_clicked and query.strip():
+        process_classify_action(query.strip())
+        st.session_state.input_key_counter += 1
         st.rerun()
-
-    # Display FAQ buttons above chat input
-    st.markdown("### Frequently Asked Questions")
-    st.markdown("Click any question below to quickly get started:")
-    cols = st.columns(2)
-    for idx, query in enumerate(Config.SAMPLE_QUERIES):
-        with cols[idx % 2]:
-            if st.button(query, key=f"faq_main_{idx}", use_container_width=True):
-                st.session_state.pending_query = query
-                st.rerun()
+    elif ask_clicked and query.strip():
+        process_ask_action(query.strip())
+        st.session_state.input_key_counter += 1
+        st.rerun()
 
     st.markdown("---")
 
-    # Chat input
-    user_input = st.chat_input(
-        "Type your question here...",
-        key="chat_input"
-    )
+    # Latest result -- rendered right here, directly below the input, every
+    # time. Full history moves into a collapsed expander further down so it
+    # never pushes the input (or the latest answer) out of view.
+    messages = st.session_state.messages
+    if messages:
+        st.markdown("#### Latest")
+        render_message_pair(messages[-2], messages[-1])
 
-    if user_input:
-        process_user_message(user_input)
-        st.rerun()
+        earlier = messages[:-2]
+        if earlier:
+            with st.expander(f"Earlier in this session ({len(earlier) // 2} more)"):
+                for i in range(0, len(earlier) - 1, 2):
+                    render_message_pair(earlier[i], earlier[i + 1])
+    else:
+        display_welcome_message()
+
+    # FAQ buttons -- tucked into an expander so they don't compete with the
+    # input for attention; clicking one only fills the box, the user still
+    # chooses which action (Classify / Ask) to run on it.
+    with st.expander("Sample questions"):
+        cols = st.columns(2)
+        for idx, sample_query in enumerate(Config.SAMPLE_QUERIES):
+            with cols[idx % 2]:
+                if st.button(sample_query, key=f"faq_main_{idx}", use_container_width=True):
+                    st.session_state[f"query_input_{st.session_state.input_key_counter}"] = sample_query
+                    st.rerun()
 
 # ==================== ENTRY POINT ====================
 
