@@ -30,6 +30,7 @@ and interactive HTML report (tests/ragas_report.html).
 import asyncio
 import csv
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -74,6 +75,45 @@ def write_html_report(results):
     template = HTML_TEMPLATE_PATH.read_text(encoding="utf-8")
     html = template.replace("__DATA__", json.dumps(results))
     HTML_OUTPUT_PATH.write_text(html, encoding="utf-8")
+
+
+def write_gha_summary(results, avg_correctness):
+    """
+    Writes a Markdown summary to the GitHub Actions step summary, built
+    directly from the same JSON results this script already produces --
+    the HTML report isn't usable here since GHA summaries render a limited
+    Markdown subset, not arbitrary JS-driven pages. No-ops outside of CI
+    (GITHUB_STEP_SUMMARY is unset locally).
+    """
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_path:
+        return
+
+    lines = [
+        "## RAG Eval Results (Ragas)",
+        "",
+        f"**Average Answer Correctness: {avg_correctness:.1%}** -- threshold: {CORRECTNESS_THRESHOLD:.0%}",
+        "",
+        "| Question | Precision | Recall | Faithfulness | Correctness |",
+        "| --- | --- | --- | --- | --- |",
+    ]
+    for r in results:
+        q = r["question"].replace("|", "\\|")[:60]
+        lines.append(
+            f"| {q} | {r['context_precision']['score']:.2f} | {r['context_recall']['score']:.2f} | "
+            f"{r['faithfulness']['score']:.2f} | {r['answer_correctness']['score']:.2f} |"
+        )
+
+    categories = sorted({r["category"] for r in results if r["category"]})
+    if categories:
+        lines += ["", "### Per-category Answer Correctness", "", "| Category | Avg Correctness | Questions |", "| --- | --- | --- |"]
+        for cat in categories:
+            cat_rows = [r for r in results if r["category"] == cat]
+            cat_avg = sum(r["answer_correctness"]["score"] for r in cat_rows) / len(cat_rows)
+            lines.append(f"| {cat} | {cat_avg:.2f} | {len(cat_rows)} |")
+
+    with open(summary_path, "a", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
 
 
 def load_rows():
@@ -309,6 +349,9 @@ async def main():
     # See CORRECTNESS_THRESHOLD comment above for why this metric specifically.
     avg_correctness = sum(r["answer_correctness"]["score"] for r in results) / len(results)
     print(f"\nAverage Answer Correctness: {avg_correctness:.3f} (threshold: {CORRECTNESS_THRESHOLD})")
+
+    write_gha_summary(results, avg_correctness)
+
     if avg_correctness < CORRECTNESS_THRESHOLD:
         print(f"FAILED: average Answer Correctness {avg_correctness:.3f} is below threshold {CORRECTNESS_THRESHOLD}")
         sys.exit(1)

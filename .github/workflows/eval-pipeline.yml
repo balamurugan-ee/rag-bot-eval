@@ -1,0 +1,136 @@
+name: Eval Pipeline
+
+# One job, two sequential stages (classification, then RAG), grouped via
+# ::group::/::endgroup:: log folding rather than split into separate GHA
+# jobs -- each GHA job gets its own fresh VM, so two jobs meant installing
+# dependencies twice and starting the app server twice for no benefit,
+# since the stages were already forced sequential (RAG shouldn't run if
+# classification fails). One job = one install, one server, two gates.
+# `deploy` stays a separate job: it only becomes reachable if `eval` (both
+# stages) succeeds.
+#
+# Tradeoff accepted vs. the earlier two-workflow setup: this single trigger
+# means a classifier-only change now also runs the ~15x-more-expensive RAG
+# suite (no per-stage path filtering without extra changed-files tooling).
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "prompts/**"
+      - "tests/**"
+      - "scripts/**"
+      - "knowledge-base/**"
+      - "promptfoo.classify.yaml"
+      - "main.py"
+      - "requirements.txt"
+      - ".github/workflows/eval-pipeline.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "prompts/**"
+      - "tests/**"
+      - "scripts/**"
+      - "knowledge-base/**"
+      - "promptfoo.classify.yaml"
+      - "main.py"
+      - "requirements.txt"
+      - ".github/workflows/eval-pipeline.yml"
+  workflow_dispatch: {}
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Python dependencies (once, shared by both stages)
+        run: pip install -r requirements.txt
+
+      - name: Install promptfoo
+        run: npm install -g promptfoo
+
+      - name: Start the app server (once, shared by both stages)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          nohup uvicorn main:app --port 8000 > server.log 2>&1 &
+          echo "Waiting for server to be healthy..."
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8000/health > /dev/null; then
+              echo "Server is up."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Server failed to start within timeout."
+          cat server.log
+          exit 1
+
+      # --- Stage 1: Classification -------------------------------------
+      - name: "Stage 1: Run promptfoo classification eval"
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        # continue-on-error: promptfoo's own exit code would otherwise stop
+        # the job on ANY single failing assertion, before our 90%-threshold
+        # script gets a chance to make the real call. Let it run to
+        # completion regardless; the next step is the actual gate.
+        continue-on-error: true
+        run: |
+          echo "::group::Stage 1: Classification Eval"
+          promptfoo eval -c promptfoo.classify.yaml --no-cache -o promptfoo-classification-results.json
+          echo "::endgroup::"
+
+      - name: "Stage 1: Check classification quality gate (90% threshold)"
+        run: |
+          echo "::group::Stage 1: Classification Quality Gate"
+          python scripts/check_promptfoo_threshold.py promptfoo-classification-results.json
+          echo "::endgroup::"
+
+      - name: "Stage 1: Upload classification results (JSON)"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: promptfoo-classification-results
+          path: promptfoo-classification-results.json
+          retention-days: 30
+
+      # --- Stage 2: RAG (only reached if Stage 1's gate step above passed,
+      # since a failing step stops the job by default) ------------------
+      - name: "Stage 2: Run Ragas RAG eval (70% threshold, writes step summary)"
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          echo "::group::Stage 2: RAG Eval"
+          python scripts/ragas_rag_eval.py
+          echo "::endgroup::"
+
+      - name: "Stage 2: Upload RAG results (JSON + interactive HTML report)"
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ragas-rag-results
+          path: |
+            tests/ragas_results.json
+            tests/ragas_report.html
+          retention-days: 30
+
+  # Only reachable if both stages above passed their quality gates. Stub
+  # step standing in for a real deploy job -- demonstrates that a quality
+  # drop in either stage stops this from ever running.
+  deploy:
+    needs: eval
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "Both quality gates passed -- deployment would proceed here."
