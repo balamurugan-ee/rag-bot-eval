@@ -1,0 +1,81 @@
+name: Classification Eval (promptfoo)
+
+# Only runs when something that could affect department classification changes --
+# keeps this fast, cheap eval decoupled from the much more expensive RAG eval.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/services/classifier.py"
+      - "src/routers/classify.py"
+      - "prompts/classification_prompt.txt"
+      - "tests/classification_ground_truth.csv"
+      - "promptfoo.classify.yaml"
+      - "main.py"
+      - "requirements.txt"
+      - ".github/workflows/classification-eval.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/services/classifier.py"
+      - "src/routers/classify.py"
+      - "prompts/classification_prompt.txt"
+      - "tests/classification_ground_truth.csv"
+      - "promptfoo.classify.yaml"
+      - "main.py"
+      - "requirements.txt"
+      - ".github/workflows/classification-eval.yml"
+  workflow_dispatch: {}
+
+jobs:
+  classification-eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install promptfoo
+        run: npm install -g promptfoo
+
+      - name: Start the app server
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          nohup uvicorn main:app --port 8000 > server.log 2>&1 &
+          echo "Waiting for server to be healthy..."
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8000/health > /dev/null; then
+              echo "Server is up."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Server failed to start within timeout."
+          cat server.log
+          exit 1
+
+      - name: Run promptfoo classification eval
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: promptfoo eval -c promptfoo.classify.yaml --no-cache -o promptfoo-classification-results.json
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: promptfoo-classification-results
+          path: |
+            promptfoo-classification-results.json
+            server.log
+          retention-days: 30

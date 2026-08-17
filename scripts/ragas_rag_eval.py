@@ -8,11 +8,15 @@ RETRIEVAL METRICS (evaluate quality of retrieved context):
     expected answer?
 
 GENERATION METRICS (evaluate quality of generated answer):
-  - Faithfulness: Does the answer only contain claims traceable to the 
+  - Faithfulness: Does the answer only contain claims traceable to the
     retrieved context?
-  - Answer Relevancy: Does the answer actually address the question asked?
-  - Answer Correctness: Does the answer match the expected answer, both 
+  - Answer Correctness: Does the answer match the expected answer, both
     factually (TP/FP/FN claim overlap) and semantically?
+
+Answer Relevancy was dropped: its "noncommittal" flag zeroed out correct terse
+answers (e.g. scored 0.00 despite 0.90 underlying similarity), and it penalized
+answers for including extra correct detail beyond the literal question. Both
+behaviors produced misleading scores rather than real quality signal.
 
 The answer being graded comes from a real HTTP call to /chat, testing what's
 actually deployed. Retrieved contexts come from an independent vector store
@@ -40,13 +44,11 @@ from ragas.llms import llm_factory
 from ragas.embeddings import embedding_factory
 from ragas.metrics.collections import (
     Faithfulness,
-    AnswerRelevancy,
     AnswerCorrectness,
     ContextPrecisionWithReference,
     ContextRecall
 )
 from ragas.metrics.collections.context_precision.metric import ContextPrecisionInput, ContextPrecisionOutput
-from ragas.metrics.collections.answer_relevancy.metric import AnswerRelevanceInput, AnswerRelevanceOutput
 from ragas.metrics.collections.context_recall.metric import ContextRecallInput, ContextRecallOutput
 
 from src.vectordb.manager import VectorStoreManager
@@ -59,6 +61,14 @@ HTML_TEMPLATE_PATH = PROJECT_ROOT / "scripts" / "ragas_report_template.html"
 HTML_OUTPUT_PATH = PROJECT_ROOT / "tests" / "ragas_report.html"
 CHAT_URL = "http://localhost:8000/chat"
 
+# CI gate: Answer Correctness is the one metric that compares directly against
+# the gold answer regardless of category (on-topic, refusal, injection, tone),
+# so it's used as the pass/fail threshold. Faithfulness/Relevancy/Precision/Recall
+# are reported but not gated on -- they have real structural blind spots for
+# refusal-type answers (a correct refusal isn't "grounded in retrieved context"
+# by definition), so a low score there doesn't reliably mean a real regression.
+CORRECTNESS_THRESHOLD = 0.7
+
 
 def write_html_report(results):
     template = HTML_TEMPLATE_PATH.read_text(encoding="utf-8")
@@ -69,7 +79,11 @@ def write_html_report(results):
 def load_rows():
     with open(CSV_PATH, newline="", encoding="utf-8") as f:
         return [
-            {"question": row["question"].strip(), "expected_answer": row["expected_answer"].strip()}
+            {
+                "question": row["question"].strip(),
+                "expected_answer": row["expected_answer"].strip(),
+                "category": row.get("category", "").strip(),
+            }
             for row in csv.DictReader(f)
         ]
 
@@ -127,12 +141,12 @@ async def score_retrieval_metrics(metrics: dict, question: str, expected_answer:
 
 async def score_generation_metrics(metrics: dict, question: str, answer: str, expected_answer: str, contexts: list[str]) -> dict:
     """
-    Score generation metrics: Faithfulness, Answer Relevancy, and Answer Correctness.
+    Score generation metrics: Faithfulness and Answer Correctness.
     These metrics evaluate the quality of the generated answer.
     """
     results = {}
     context_str = "\n".join(contexts)
-    
+
     # Faithfulness - does answer contain only claims traceable to context?
     metric = metrics['faithfulness']
     statements = await metric._create_statements(question, answer)
@@ -147,33 +161,6 @@ async def score_generation_metrics(metrics: dict, question: str, answer: str, ex
         }
     else:
         results['faithfulness'] = {'score': float("nan"), 'reasoning': []}
-
-    # Answer Relevancy - does answer address the question?
-    metric = metrics['answer_relevancy']
-    generated_questions = []
-    noncommittal_flags = []
-    for _ in range(metric.strictness):
-        input_data = AnswerRelevanceInput(response=answer)
-        result = await metric.llm.agenerate(metric.prompt.to_string(input_data), AnswerRelevanceOutput)
-        if result.question:
-            generated_questions.append(result.question)
-            noncommittal_flags.append(result.noncommittal)
-    
-    if generated_questions:
-        all_noncommittal = bool(np.all(noncommittal_flags))
-        question_vec = np.asarray(await metric.embeddings.aembed_text(question)).reshape(1, -1)
-        gen_question_vec = np.asarray(await metric.embeddings.aembed_texts(generated_questions)).reshape(len(generated_questions), -1)
-        norm = np.linalg.norm(gen_question_vec, axis=1) * np.linalg.norm(question_vec, axis=1)
-        cosine_sim = np.dot(gen_question_vec, question_vec.T).reshape(-1) / norm
-        results['answer_relevancy'] = {
-            'score': float(cosine_sim.mean() * int(not all_noncommittal)),
-            'reasoning': [
-                {"generated_question": q, "similarity_to_original": float(sim), "noncommittal": bool(nc)}
-                for q, sim, nc in zip(generated_questions, cosine_sim, noncommittal_flags)
-            ]
-        }
-    else:
-        results['answer_relevancy'] = {'score': 0.0, 'reasoning': []}
 
     # Answer Correctness - does answer match expected answer factually and semantically?
     metric = metrics['answer_correctness']
@@ -225,11 +212,7 @@ def print_results(retrieval_scores: dict, generation_scores: dict):
     print(f"\nFaithfulness: {generation_scores['faithfulness']['score']:.2f}")
     for r in generation_scores['faithfulness']['reasoning']:
         print(f"  [{'OK' if r['faithful'] else 'UNFAITHFUL'}] {r['statement']}")
-    
-    print(f"\nAnswer Relevancy: {generation_scores['answer_relevancy']['score']:.2f}")
-    for r in generation_scores['answer_relevancy']['reasoning'][:1]:
-        print(f"  reverse-engineered Q: {r['generated_question']} (sim={r['similarity_to_original']:.2f})")
-    
+
     correctness = generation_scores['answer_correctness']
     print(f"\nAnswer Correctness: {correctness['score']:.2f}")
     print(f"  (factuality={correctness['reasoning']['factuality_score']:.2f}, similarity={correctness['reasoning']['similarity_score']:.2f})")
@@ -258,7 +241,6 @@ async def main():
     
     generation_metrics = {
         'faithfulness': Faithfulness(llm=ragas_llm),
-        'answer_relevancy': AnswerRelevancy(llm=ragas_llm, embeddings=ragas_embeddings),
         'answer_correctness': AnswerCorrectness(llm=ragas_llm, embeddings=ragas_embeddings),
     }
 
@@ -285,6 +267,7 @@ async def main():
         results.append({
             "question": question,
             "expected_answer": expected_answer,
+            "category": row["category"],
             "answer": answer,
             "retrieved_contexts": contexts,
             "retrieval_metrics": retrieval_scores,
@@ -305,13 +288,31 @@ async def main():
     print("\n" + "=" * 100)
     print("SUMMARY TABLE")
     print("=" * 100)
-    print(f"{'Question':<40} | {'Prec':>6} {'Recall':>6} | {'Faith':>6} {'Relev':>6} {'Correct':>6}")
+    print(f"{'Question':<40} | {'Prec':>6} {'Recall':>6} | {'Faith':>6} {'Correct':>6}")
     print("-" * 100)
     for r in results:
         q = r['question'][:38] + ".." if len(r['question']) > 40 else r['question']
         print(f"{q:<40} | {r['context_precision']['score']:>6.2f} {r['context_recall']['score']:>6.2f} | "
-              f"{r['faithfulness']['score']:>6.2f} {r['answer_relevancy']['score']:>6.2f} {r['answer_correctness']['score']:>6.2f}")
+              f"{r['faithfulness']['score']:>6.2f} {r['answer_correctness']['score']:>6.2f}")
     print("=" * 100)
+
+    # Per-category breakdown (informational -- helps explain a threshold failure at a glance)
+    categories = sorted({r["category"] for r in results if r["category"]})
+    if categories:
+        print("\nPer-category Answer Correctness:")
+        for cat in categories:
+            cat_rows = [r for r in results if r["category"] == cat]
+            cat_avg = sum(r["answer_correctness"]["score"] for r in cat_rows) / len(cat_rows)
+            print(f"  {cat:<20} {cat_avg:.2f}  ({len(cat_rows)} questions)")
+
+    # CI gate: fail the run if average Answer Correctness drops below threshold.
+    # See CORRECTNESS_THRESHOLD comment above for why this metric specifically.
+    avg_correctness = sum(r["answer_correctness"]["score"] for r in results) / len(results)
+    print(f"\nAverage Answer Correctness: {avg_correctness:.3f} (threshold: {CORRECTNESS_THRESHOLD})")
+    if avg_correctness < CORRECTNESS_THRESHOLD:
+        print(f"FAILED: average Answer Correctness {avg_correctness:.3f} is below threshold {CORRECTNESS_THRESHOLD}")
+        sys.exit(1)
+    print("PASSED")
 
 
 if __name__ == "__main__":

@@ -181,14 +181,14 @@ function badge(name, score) {
   return `<span class="badge ${b}"><span class="icon">${icon(b)}</span>${name} ${score.toFixed(2)} &middot; ${label(b)}</span>`;
 }
 
-const metrics = ["faithfulness", "answer_relevancy", "context_precision", "context_recall", "answer_correctness"];
+const metrics = ["faithfulness", "context_precision", "context_recall", "answer_correctness"];
 const labels = {
-  faithfulness: "Avg Faithfulness", answer_relevancy: "Avg Answer Relevancy",
+  faithfulness: "Avg Faithfulness",
   context_precision: "Avg Context Precision", context_recall: "Avg Context Recall",
   answer_correctness: "Avg Answer Correctness",
 };
 const shortLabels = {
-  faithfulness: "Faith", answer_relevancy: "Relev", context_precision: "Prec",
+  faithfulness: "Faith", context_precision: "Prec",
   context_recall: "Recall", answer_correctness: "Correct",
 };
 const statRow = document.getElementById("statRow");
@@ -236,20 +236,6 @@ cardsEl.innerHTML = DATA.map((d, i) => `
               <div class="claim">${escapeHtml(r.statement)}</div>
               <div class="why">${escapeHtml(r.reason)}</div>
             </div>
-          </div>
-        `).join("")}
-      </div>
-
-      <div class="metric-section">
-        <h3>Answer Relevancy ${badge("", d.answer_relevancy.score)}</h3>
-        ${d.answer_relevancy.reasoning.slice(0, 1).map(r => `
-          <div class="reason-row ${r.similarity_to_original >= 0.7 ? 'ok' : 'bad'}">
-            <span class="icon">${r.similarity_to_original >= 0.7 ? '&check;' : '&times;'}</span>
-            <div class="content">
-              <div class="claim">Reverse-engineered question: &ldquo;${escapeHtml(r.generated_question)}&rdquo;${r.noncommittal ? ' <span style="color:var(--critical)">(flagged non-committal)</span>' : ''}</div>
-              <div class="why">Compared to the original question via embedding cosine similarity &mdash; the lower this is, the more the answer's content drifted from what was actually asked.</div>
-            </div>
-            <span class="sim">sim ${r.similarity_to_original.toFixed(2)}</span>
           </div>
         `).join("")}
       </div>

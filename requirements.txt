@@ -20,4 +20,4 @@ arize-phoenix==15.0.0
 openinference-instrumentation-langchain
 opentelemetry-instrumentation-fastapi
 
-ragas
+ragas==0.4.3

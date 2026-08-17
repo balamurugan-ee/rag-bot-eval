@@ -1,0 +1,83 @@
+name: RAG Eval (Ragas)
+
+# Only runs when something that could affect RAG answer quality changes -- this
+# suite is ~15x more expensive per question than the classification eval
+# (~19 LLM/embedding calls per question vs ~1), so it's kept separate and
+# path-scoped rather than running on every push.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "src/services/receptionist.py"
+      - "src/routers/chat.py"
+      - "src/vectordb/**"
+      - "prompts/receptionist_prompt.txt"
+      - "tests/rag_ground_truth.csv"
+      - "scripts/ragas_rag_eval.py"
+      - "scripts/ragas_report_template.html"
+      - "knowledge-base/**"
+      - "main.py"
+      - "requirements.txt"
+      - ".github/workflows/rag-eval.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/services/receptionist.py"
+      - "src/routers/chat.py"
+      - "src/vectordb/**"
+      - "prompts/receptionist_prompt.txt"
+      - "tests/rag_ground_truth.csv"
+      - "scripts/ragas_rag_eval.py"
+      - "scripts/ragas_report_template.html"
+      - "knowledge-base/**"
+      - "main.py"
+      - "requirements.txt"
+      - ".github/workflows/rag-eval.yml"
+  workflow_dispatch: {}
+
+jobs:
+  rag-eval:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
+      - name: Start the app server
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          nohup uvicorn main:app --port 8000 > server.log 2>&1 &
+          echo "Waiting for server to be healthy..."
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:8000/health > /dev/null; then
+              echo "Server is up."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Server failed to start within timeout."
+          cat server.log
+          exit 1
+
+      - name: Run Ragas RAG eval
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python scripts/ragas_rag_eval.py
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ragas-rag-results
+          path: |
+            tests/ragas_results.json
+            tests/ragas_report.html
+            server.log
+          retention-days: 30
